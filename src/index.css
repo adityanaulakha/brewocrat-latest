@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+/* Palette: Ivory Warmth #F4E4CB · Amber Red #B5482A (amber #D28C3C) · Olive Green #5C6330 (deep #1C1E10).
+   Each section opts into a theme; the Tailwind tokens read these variables, so one component works on any of them. */
+/* meeting1-v2 60-30-10: ~60% amber red section grounds, ~30% olive (hero/preloader/footer/visit/skybar),
+   ~10% warm ivory (one accent section + cards/dropdowns). Gold for text accents & CTAs only. */
+:root, .t-olive{ --c-ink: 52 57 27; --c-cask: 61 66 32; --c-oak: 72 78 38; --c-malt: 88 95 47; --c-brass: 212 166 74; --c-amber: 143 46 28; --c-honey: 236 204 138; --c-foam: 248 236 214; --c-copper: 79 85 40; --c-cta: 212 166 74; --c-cta-ink: 52 16 10; }
+.t-red{ --c-ink: 122 36 22; --c-cask: 136 42 26; --c-oak: 150 50 31; --c-malt: 168 62 38; --c-brass: 222 178 88; --c-amber: 181 72 42; --c-honey: 236 204 138; --c-foam: 248 236 214; --c-copper: 79 85 40; --c-cta: 212 166 74; --c-cta-ink: 52 16 10; }
+.t-ivory{ --c-ink: 233 220 196; --c-cask: 240 228 208; --c-oak: 224 208 180; --c-malt: 210 190 160; --c-brass: 143 46 28; --c-amber: 181 72 42; --c-honey: 122 36 22; --c-foam: 52 22 14; --c-copper: 79 85 40; --c-cta: 143 46 28; --c-cta-ink: 248 236 214; }
+.t-olive, .t-ivory, .t-red { background-color: rgb(var(--c-ink)); color: rgb(var(--c-foam)); }
+.t-ivory { color-scheme: light; }
+html { -webkit-font-smoothing: antialiased; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+body { background: #7A2416; color: #F8ECD6; font-family: Lora, Georgia, serif; overflow-x: hidden; }
+h1, h2, h3, .font-display { font-synthesis: none; }
+h1.font-display, h2.font-display, .h-display { font-weight: 700; font-variation-settings: 'SOFT' 30, 'WONK' 0; letter-spacing: -0.01em; }
+/* subheading: Fraunces italic semibold, accent words in a script */
+.sub { font-family: Fraunces, Georgia, serif; font-style: italic; font-weight: 600; }
+.script { font-family: 'Dancing Script', cursive; font-weight: 700; font-style: normal; letter-spacing: 0; }
+::selection { background: #D4A64A; color:#34100A; color: #FBF3E6; }
+
+@layer components {
+  .gold-text { color: rgb(var(--c-brass)); }
+  .gold-text.italic, .accent { font-family: 'Dancing Script', cursive; font-style: normal; font-weight: 700; text-transform: none; letter-spacing: 0; font-size: 1.08em; }
+  .eyebrow { @apply font-sans text-[10px] sm:text-[11px] font-extrabold uppercase tracking-[0.26em] text-brass; }
+  .h-display { @apply font-display font-bold leading-[1] tracking-[-0.01em]; }
+  /* buttons: understated — fine pill, hairline edge, no lift or glow */
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.16em] transition-[filter,background-color,color] duration-500;
+    background: rgb(var(--c-cta)); color: rgb(var(--c-cta-ink));
+  }
+  .btn-gold:hover { filter: brightness(1.1); }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full border border-brass/35 px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.16em] text-foam/90 transition-colors duration-500 hover:border-brass hover:text-honey;
+    background: transparent;
+  }
+  .btn-line {
+    @apply inline-flex items-center gap-3 border-b border-brass/40 pb-1.5 font-sans text-[11px] font-bold uppercase tracking-[0.18em] text-honey transition-colors duration-500 hover:border-honey hover:text-foam;
+  }
+  .grain::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .07; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wood { background: radial-gradient(120% 80% at 50% 0%, rgb(var(--c-oak)) 0%, rgb(var(--c-cask)) 55%, rgb(var(--c-ink)) 100%); }
+  .card-glass { background: linear-gradient(160deg, rgb(var(--c-foam) / .05), rgb(var(--c-foam) / .015)); border: 1px solid rgb(var(--c-brass) / .2); }
+  .frame { position: relative; }
+  .frame::after { content: ''; position: absolute; inset: 10px; border: 1px solid rgb(var(--c-honey) / .25); pointer-events: none; }
+  .rule { height: 1px; background: rgb(var(--c-brass) / .25); }
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, rgb(var(--c-brass) / .45), transparent); }
+}
+
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee { animation: marquee 38s linear infinite; }
+/* Skybar flag marquee: slow drift + travelling cloth wave on each letter */
+.flag-track { animation: marquee var(--dur, 76s) linear infinite; will-change: transform; }
+.flag-ch {
+  display: inline-block;
+  transform-origin: 50% 40%;
+  /* ease-in-out alternate ≈ a sine; the phase grows along the text so the crest travels like a ripple
+     through cloth, and the shading (opacity) runs a quarter-period behind, like light on the folds */
+  animation: flag-wave 1.6s cubic-bezier(.37,0,.63,1) infinite alternate, flag-shade 1.6s cubic-bezier(.37,0,.63,1) infinite alternate;
+  animation-delay: calc(var(--i) * 0.085s - 60s), calc(var(--i) * 0.085s - 60.8s);
+}
+@keyframes flag-wave {
+  from { transform: translateY(-0.15em) rotate(-2.6deg) skewX(-4deg); }
+  to   { transform: translateY(0.15em) rotate(2.6deg) skewX(4deg); }
+}
+@keyframes flag-shade { from { opacity: 1; } to { opacity: .62; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .flag-track, .flag-ch { animation: none !important; }
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+/* AA contrast: muted copy never drops below ~4.8:1 on any of the three grounds */
+.t-ivory .text-foam\/35, .t-ivory .text-foam\/40, .t-ivory .text-foam\/45, .t-ivory .text-foam\/50, .t-ivory .text-foam\/55, .t-ivory .text-foam\/60, .t-ivory .text-foam\/65 { color: rgb(var(--c-foam) / .74); }
+.t-olive .text-foam\/35, .t-olive .text-foam\/40, .t-olive .text-foam\/45, .t-olive .text-foam\/50, .t-olive .text-foam\/55, .t-olive .text-foam\/60, .t-olive .text-foam\/65, .t-red .text-foam\/35, .t-red .text-foam\/40, .t-red .text-foam\/45, .t-red .text-foam\/50, .t-red .text-foam\/55, .t-red .text-foam\/60, .t-red .text-foam\/65 { color: rgb(var(--c-foam) / .66); }
+
+.hero-btn { display: inline-flex; align-items: center; gap: .6rem; white-space: nowrap; border-radius: 9999px; border: 1px solid rgba(236,204,138,.75); padding: .85rem 1.35rem; font-family: Lora, Georgia, serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .2em; color: #F8ECD6; background: rgba(40,10,5,.18); backdrop-filter: blur(6px); transition: background-color .4s, color .4s, border-color .4s; }
+.hero-btn:hover, .hero-btn[aria-expanded="true"] { background: #D4A64A; color: #34100A; border-color: #D4A64A; }
+@media (min-width: 640px) { .hero-btn { padding: 1rem 1.9rem; } }
+
+@keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.14); } }
+.kenburns { animation: kenburns 14s ease-in-out infinite alternate; transform-origin: 50% 60%; }
