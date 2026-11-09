@@ -11,7 +11,7 @@ export default function MenuPage({ onBook }: { onBook: () => void }) {
   const [tab, setTab] = useState<'food' | 'drinks'>(sp.get('tab') === 'drinks' ? 'drinks' : 'food')
   const [cat, setCat] = useState(() => sp.get('cat') || 'all')
   const [q, setQ] = useState('')
-  useEffect(() => { document.title = 'Menu — Brewocrat Brewery · Skybar · Kitchen'; window.scrollTo(0, 0) }, [])
+  useEffect(() => { window.scrollTo(0, 0) }, [])
   useEffect(() => {
     setTab(sp.get('tab') === 'drinks' ? 'drinks' : 'food')
     setCat(sp.get('cat') || 'all')
@@ -29,11 +29,11 @@ export default function MenuPage({ onBook }: { onBook: () => void }) {
     <main className="t-ivory min-h-screen bg-ink pb-24">
       <section className="relative overflow-hidden pb-8 pt-28">
         <img src="/images/venue/9193297f7201519323440fd58138cda7.webp" alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover opacity-25" />
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/60 via-ink/80 to-ink" />
+        <div className="pointer-events-none absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(233,220,196,.55) 0%, rgba(233,220,196,.82) 48%, rgb(233,220,196) 100%)' }} />
         <div className="relative mx-auto max-w-5xl px-5 text-center">
           <Eyebrow className="justify-center">Brewery · Skybar · Kitchen</Eyebrow>
-          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease }} className="mt-5 font-display text-6xl font-bold uppercase text-foam sm:text-8xl">
-            The <span className="gold-text italic">Menu</span>
+          <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease }} className="mt-5 font-display text-5xl font-bold text-foam sm:text-7xl">
+            The <span className="text-brass">menu</span>
           </motion.h1>
           <div className="mx-auto mt-8 inline-flex rounded-full border border-brass/30 bg-cask p-1">
             {(['food', 'drinks'] as const).map((t) => (
@@ -46,7 +46,7 @@ export default function MenuPage({ onBook }: { onBook: () => void }) {
         </div>
       </section>
 
-      <div className="sticky top-[64px] z-30 border-y border-brass/15 bg-ink/85 backdrop-blur-xl">
+      <div className="sticky top-[64px] z-30 border-y border-brass/15 bg-ink">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 py-3 sm:px-8 lg:flex-row lg:items-center">
           <div className="flex flex-1 gap-2 overflow-x-auto no-scrollbar">
             {cats.map((c) => (

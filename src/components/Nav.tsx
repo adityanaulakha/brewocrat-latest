@@ -138,30 +138,28 @@ export default function Nav({ onBook }: { onBook: (n?: string) => void }) {
     ...foodItems,
   ]
 
-  const light = scrolled || loc.pathname !== '/'
+  const solid = scrolled || loc.pathname !== '/'
   const activeItems = open === 'book' ? book : open === 'menu' ? explore : []
   const pick = (it: Item) => { setOpen(null); it.go() }
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+    <header className="site-nav pointer-events-none fixed inset-x-0 top-0">
       <div className="flex justify-center px-4 pt-3 sm:px-4 sm:pt-6">
         <div ref={topbarRef} data-topbar
-          className={`pointer-events-auto relative flex h-14 w-full max-w-[560px] items-stretch overflow-visible rounded-full border transition-all duration-500 sm:h-16 ${
-            light
-              ? 'border-[#8F2E1C]/25 bg-[#E9DCC4]/92 shadow-[0_12px_40px_rgba(40,20,10,.18)] backdrop-blur-xl'
-              : 'border-[#F8ECD6]/35 bg-black/15 shadow-[0_12px_40px_rgba(0,0,0,.25)] backdrop-blur-md'
+          className={`pointer-events-auto relative flex h-14 w-full max-w-[560px] items-stretch overflow-visible rounded-full border transition-colors duration-500 sm:h-16 ${
+            solid
+              ? 'border-[#DEB258]/40 bg-[#5C6330] shadow-[0_12px_32px_-16px_rgba(20,24,8,.65)]'
+              : 'border-[#F8ECD6]/35 bg-[#1C1E10]/45 shadow-[0_12px_32px_-18px_rgba(0,0,0,.45)]'
           }`}>
-          <DropTrigger id="book" label="Book Now" shortLabel="Book Now" items={book} align="left" open={open} setOpen={setOpen} light={light} onPick={pick} desktop={isDesktop} />
+          <DropTrigger id="book" label="Book Now" shortLabel="Book Now" items={book} align="left" open={open} setOpen={setOpen} light={false} onPick={pick} desktop={isDesktop} />
 
           <Link to="/" onClick={() => window.scrollTo({ top: 0 })} aria-label="Brewocrat home"
-            className={`absolute left-1/2 top-1/2 z-20 grid h-[58px] w-[58px] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border shadow-[0_8px_24px_rgba(20,4,2,.35)] transition sm:h-[72px] sm:w-[72px] ${
-              light ? 'border-[#DEB258]/60 bg-[#E9DCC4]' : 'border-[#DEB258]/55 bg-[#1C1E10]/92'
-            }`}>
+            className="absolute left-1/2 top-1/2 z-20 grid h-[58px] w-[58px] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-[#DEB258]/70 bg-[#1C1E10] shadow-[0_0_22px_-6px_rgba(212,166,74,.55),0_8px_24px_rgba(20,4,2,.4)] transition sm:h-[72px] sm:w-[72px]">
             <img src={brand.navEmblem} srcSet={`${brand.navEmblem} 1x, ${brand.navEmblem2x} 2x`} alt="" aria-hidden
-              className="h-10 w-10 object-contain drop-shadow-[0_2px_10px_rgba(210,140,60,.45)] sm:h-12 sm:w-12" />
+              className="h-10 w-10 object-contain sm:h-12 sm:w-12" />
           </Link>
 
-          <DropTrigger id="menu" label="Explore the Menu" shortLabel="Menu" items={explore} align="right" open={open} setOpen={setOpen} light={light} onPick={pick} desktop={isDesktop} />
+          <DropTrigger id="menu" label="Explore the Menu" shortLabel="Menu" items={explore} align="right" open={open} setOpen={setOpen} light={false} onPick={pick} desktop={isDesktop} />
         </div>
       </div>
 

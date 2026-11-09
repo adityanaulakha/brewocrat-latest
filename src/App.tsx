@@ -5,10 +5,10 @@ import Lenis from 'lenis'
 import Preloader from './components/Preloader'
 import Nav from './components/Nav'
 import Hero from './components/Hero'
-import Intro from './components/Intro'
 import Footer from './components/Footer'
 import BookModal from './components/BookModal'
 import { setLenis } from './lib/scroll'
+import { ScrollTrigger } from './lib/motion'
 
 // the menu route is its own chunk (it isn't needed for the landing page)
 const MenuPage = lazy(() => import('./pages/MenuPage'))
@@ -21,9 +21,8 @@ function Home({ ready, onBook }: { ready: boolean; onBook: (n?: string) => void 
   return (
     <main>
       <Hero ready={ready} onBook={() => onBook()} />
-      <Intro />
-      <Suspense fallback={<div className="min-h-[200vh] bg-[#7A2416]" />}>
-        {ready ? <BelowFold onBook={onBook} /> : <div className="min-h-[200vh] bg-[#7A2416]" />}
+      <Suspense fallback={<div className="min-h-[100svh] bg-[#E9DCC4]" />}>
+        {ready ? <BelowFold onBook={onBook} /> : <div className="min-h-[100svh] bg-[#E9DCC4]" />}
       </Suspense>
     </main>
   )
@@ -38,13 +37,19 @@ export default function App() {
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const l = new Lenis({ lerp: 0.1, smoothWheel: true })
+    const l = new Lenis({ lerp: 0.16, smoothWheel: true, syncTouch: false, wheelMultiplier: 1 })
     setLenis(l)
     let raf = 0
-    const loop = (t: number) => { l.raf(t); raf = requestAnimationFrame(loop) }
+    const loop = (t: number) => { l.raf(t); ScrollTrigger.update(); raf = requestAnimationFrame(loop) }
     raf = requestAnimationFrame(loop)
     return () => { cancelAnimationFrame(raf); l.destroy(); setLenis(null) }
   }, [])
+
+  useEffect(() => {
+    document.title = loc.pathname.startsWith('/menu')
+      ? 'Menu - Brewocrat Brewery · Skybar · Kitchen'
+      : 'Brewocrat - Brewery · Skybar · Kitchen | Element One, Gurugram'
+  }, [loc.pathname])
 
   const openBook = useCallback((n?: string) => { setNote(n); setBook(true) }, [])
   const done = useCallback(() => { setLoading(false); setTimeout(() => setReady(true), 250) }, [])
@@ -53,12 +58,14 @@ export default function App() {
     <>
       <AnimatePresence>{loading && <Preloader onDone={done} />}</AnimatePresence>
       <Nav onBook={openBook} />
-      <Routes>
-        <Route path="/" element={<Home ready={ready} onBook={openBook} />} />
-        <Route path="/menu" element={<Suspense fallback={<div className="min-h-screen bg-ink" />}><MenuPage onBook={() => openBook()} /></Suspense>} />
-        <Route path="*" element={<Home ready={ready} onBook={openBook} />} />
-      </Routes>
-      <Footer />
+      <div className="page-layer">
+        <Routes>
+          <Route path="/" element={<Home ready={ready} onBook={openBook} />} />
+          <Route path="/menu" element={<Suspense fallback={<div className="min-h-screen bg-ink" />}><MenuPage onBook={() => openBook()} /></Suspense>} />
+          <Route path="*" element={<Home ready={ready} onBook={openBook} />} />
+        </Routes>
+        <Footer />
+      </div>
       <BookModal open={book} onClose={() => setBook(false)} preset={note} />
     </>
   )

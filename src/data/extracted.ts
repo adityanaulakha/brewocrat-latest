@@ -2387,7 +2387,7 @@ export const events = [
     "time": "8:30 PM Onwards",
     "genre": "Acoustic • Sufi • Pop Fusion",
     "zone": "The Courtyard Stage",
-    "desc": "Mid-week unwind featuring soulful unplugged acoustic sessions and melodic dinner arrangements that transition into upbeat sing-alongs.",
+    "desc": "Unplugged acoustic sets through dinner.",
     "badge": "Mid-Week Live",
     "image": "/images/venue/7cbf0f9e69ab18ec07dea52f3766ab4a.webp"
   },
@@ -2400,7 +2400,7 @@ export const events = [
     "time": "8:00 PM Onwards",
     "genre": "Retro Pop • 90s/2000s • Commercial Beats",
     "zone": "Courtyard & Skybar Terrace",
-    "desc": "Throwback playlist heaven: sing along to all your favourite classic anthems, pop nostalgia, and timeless indie hits with ice-cold craft beer towers.",
+    "desc": "Classic anthems, with craft beer towers.",
     "badge": "Nostalgia Rewind",
     "image": "/images/venue/800dea653d01ee7809661aa6055d96ca.webp"
   },
@@ -2413,7 +2413,7 @@ export const events = [
     "time": "8:00 PM Till Late",
     "genre": "Bollywood Blockbusters • Punjabi Beats • Commercial Club",
     "zone": "Full Venue Dual Zone Experience",
-    "desc": "Gurugram’s ultimate Friday celebration: high-energy commercial hits, massive crowd euphoria, and craft cocktails poured under fairy-lit pergolas.",
+    "desc": "Bollywood and Punjabi hits across the courtyard and skybar.",
     "featured": true,
     "badge": "House Full Energy",
     "image": "/images/venue/6c597800757903f5a442c7ea37bd6c13.webp"
@@ -2427,7 +2427,7 @@ export const events = [
     "time": "8:30 PM Onwards",
     "genre": "Live Rock • Bollywood Fusion • Late-Night DJ",
     "zone": "Courtyard Live Stage & Terrace",
-    "desc": "The biggest night of the week. Kick off with a powerhouse 6-piece live band followed by late-night commercial club beats across the courtyard.",
+    "desc": "A 6-piece live band, then a late DJ in the courtyard.",
     "badge": "Weekend Headliner",
     "image": "/images/venue/a6cef196266bc7353481d501e90503fe.webp"
   },
@@ -2440,7 +2440,7 @@ export const events = [
     "time": "5:00 PM – 9:00 PM",
     "genre": "Chill Sunset Beats • Acoustic Melodies",
     "zone": "The Super Terrace & Skybar",
-    "desc": "Wrap up your weekend with lazy late lunches, golden hour sunset skylines, and soothing acoustic melodies on our open-air terrace.",
+    "desc": "Sunset sessions on the terrace.",
     "badge": "Sundowner Vibes",
     "image": "/images/venue/800dea653d01ee7809661aa6055d96ca.webp"
   },
@@ -2453,7 +2453,7 @@ export const events = [
     "time": "12:00 PM – 12:00 AM",
     "genre": "Ambient Lounge • Soft Jazz",
     "zone": "The Salon (Indoor AC)",
-    "desc": "Calmer soundtrack, intimate conversations, wood-fired pizzas, and fresh pints straight from the conditioning tanks at 2°C.",
+    "desc": "Quieter dining, fresh pints, and soft jazz.",
     "badge": "Easy Dining",
     "image": "/images/venue/6c597800757903f5a442c7ea37bd6c13.webp"
   }

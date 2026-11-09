@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { taps, tapNotes } from '../data/content'
+import { backdropSlots } from '../data/backdrops'
 import { Icon, Reveal, SplitHeading } from './ui'
 import Backdrop from './Backdrop'
 import { rs } from '../lib/img'
@@ -15,8 +16,8 @@ export default function Taps({ onBook }: { onBook: () => void }) {
   const [i, setI] = useState(0)
   const beer = taps[i]
   return (
-    <section id="taps" className="t-ivory relative flex min-h-[100svh] flex-col justify-center overflow-hidden bg-ink py-12 lg:py-14">
-      <Backdrop src="/images/backdrops/taps.webp" srcSet="/images/backdrops/taps-800w.webp 800w, /images/backdrops/taps.webp 1200w" tone="light" />
+    <section id="taps" className="t-ivory relative overflow-hidden bg-ink py-8 sm:py-12 lg:flex lg:min-h-[88svh] lg:flex-col lg:justify-center lg:py-14">
+      <Backdrop slot={backdropSlots.taps} />
       <div className="relative z-10 mx-auto w-full max-w-6xl px-5 sm:px-10">
         <div className="text-center">
           <Reveal><span className="eyebrow">The microbrewery · Brewed on-site · No preservatives</span></Reveal>
@@ -25,19 +26,18 @@ export default function Taps({ onBook }: { onBook: () => void }) {
 
         <div className="-mx-5 mt-7 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 no-scrollbar sm:mx-0 sm:grid sm:grid-cols-4 sm:gap-5 sm:overflow-visible sm:px-0">
           {taps.map((t, k) => (
-            <motion.button key={t.id} onClick={() => setI(k)} aria-pressed={k === i}
-              initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-40px' }} transition={{ duration: 0.9, delay: k * 0.08, ease: calm }}
-              className={`group relative w-[62vw] max-w-[240px] shrink-0 snap-center overflow-hidden rounded-[22px] text-left transition-shadow duration-500 sm:w-auto sm:max-w-none ${k === i ? 'shadow-[0_24px_50px_-24px_rgba(90,30,15,.65)] ring-2 ring-[#8F2E1C]' : 'ring-1 ring-[#8F2E1C]/15'}`}>
+            <button key={t.id} type="button" onClick={() => setI(k)} aria-pressed={k === i}
+              className={`group relative w-[62vw] max-w-[240px] shrink-0 snap-center overflow-hidden rounded-[22px] text-left sm:w-auto sm:max-w-none ${k === i ? 'lift ring-2 ring-[#8F2E1C]' : 'shadow-[0_14px_32px_-20px_rgba(28,30,16,.45)] ring-1 ring-[#1C1E10]/10'}`}>
               <div className="relative aspect-[3/4] overflow-hidden bg-cask">
-                <img src={t.image} {...rs(t.image, '(min-width: 640px) 25vw, 62vw')} alt={t.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-[1.6s] ease-out group-hover:scale-[1.05]" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#3a120b]/85 via-transparent to-transparent" />
+                <img src={t.image} {...rs(t.image, '(min-width: 640px) 25vw, 62vw')} alt={t.title} loading="lazy" className="h-full w-full object-cover" />
+                <div className="photo-fade pointer-events-none absolute inset-0" />
                 <span className="absolute left-3 top-3 rounded-full bg-[#F6E9D2]/90 px-2.5 py-1 font-sans text-[10px] font-semibold tracking-[0.18em] text-[#8F2E1C]">TAP 0{k + 1}</span>
                 <div className="absolute inset-x-0 bottom-0 p-3.5 sm:p-4">
                   <div className="font-display text-lg font-bold leading-tight text-[#F8ECD6] sm:text-xl">{t.title.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())}</div>
                   <div className="mt-0.5 font-sans text-[11px] italic text-[#ECCC8A]">{tapNotes[t.id]} · {t.abv}</div>
                 </div>
               </div>
-            </motion.button>
+            </button>
           ))}
         </div>
 

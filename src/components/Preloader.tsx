@@ -29,7 +29,7 @@ export default function Preloader({ onDone }: { onDone: () => void }) {
   return (
     <motion.div
       key="preloader"
-      className="fixed inset-0 z-[100] cursor-pointer select-none overflow-hidden"
+      className="fixed inset-0 z-[2000] cursor-pointer select-none overflow-hidden"
       style={{ background: 'radial-gradient(90% 80% at 50% 50%, #5C6330 0%, #3A3E22 55%, #1C1E10 100%)' }}
       onClick={finish}
       role="dialog"

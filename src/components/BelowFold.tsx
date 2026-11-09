@@ -6,10 +6,11 @@ import Dossier from './Dossier'
 import Events from './Events'
 import Universes from './Universes'
 import Gallery from './Gallery'
-import Reserve from './Reserve'
+import Intro from './Intro'
 import Testimonials from './Testimonials'
+import Reserve from './Reserve'
 
-/** Everything below About; loaded as its own chunk after the preloader hands off. */
+/** After the hero: beers, then food and experience, with About and reviews near the end. */
 export default function BelowFold({ onBook }: { onBook: (n?: string) => void }) {
   return (
     <>
@@ -21,8 +22,9 @@ export default function BelowFold({ onBook }: { onBook: (n?: string) => void }) 
       <Events onBook={onBook} />
       <Universes onBook={onBook} />
       <Gallery />
-      <Reserve onBook={() => onBook()} />
+      <Intro />
       <Testimonials />
+      <Reserve onBook={() => onBook()} />
     </>
   )
 }

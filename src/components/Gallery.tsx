@@ -1,9 +1,40 @@
-import { useRef, useState } from 'react'
-import { AnimatePresence, motion, useScroll, useTransform, type MotionValue } from 'framer-motion'
+import { useRef, useState, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
+import { AnimatePresence, motion, useScroll, useTransform, type MotionValue, type Variants } from 'framer-motion'
 import { gallery } from '../data/extracted'
 import { galleryCopy, interiors } from '../data/content'
-import { Icon, Reveal, SplitHeading } from './ui'
+import { Icon } from './ui'
 import { rs } from '../lib/img'
+
+/** Production journal entrance. Other sections keep the shorter Meeting 2 reveal. */
+function Reveal({ children, delay = 0, className = '' }: { children: ReactNode; delay?: number; className?: string }) {
+  return (
+    <motion.div className={className} initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }} transition={{ duration: 1.4, delay, ease: [0.25, 0.1, 0.25, 1] }}>
+      {children}
+    </motion.div>
+  )
+}
+
+const wordV: Variants = { hidden: { opacity: 0, y: 8 }, show: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 1.4, delay: i * 0.05, ease: [0.25, 0.1, 0.25, 1] } }) }
+
+/** Production journal heading: accent words stay in Dancing Script. */
+function SplitHeading({ text, className = '', accent }: { text: string; className?: string; accent?: string }) {
+  const words = text.split(' ')
+  const accWords = accent ? accent.split(' ') : []
+  const all = [...words.map((w) => ({ w, a: false })), ...accWords.map((w) => ({ w, a: true }))]
+  return (
+    <h2 className={className}>
+      <motion.span className="inline" initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}>
+        {all.map(({ w, a }, i) => (
+          <span key={i} className="inline-block pb-[0.08em] align-bottom">
+            <motion.span custom={i} variants={wordV} className={`inline-block ${a ? 'gold-text italic' : ''}`}>{w}&nbsp;</motion.span>
+          </span>
+        ))}
+      </motion.span>
+    </h2>
+  )
+}
 
 const items = [
   ...gallery.map((g) => ({ src: g.src, title: g.title })),
@@ -48,12 +79,12 @@ export default function Gallery() {
         <div ref={ref} className="relative mx-auto mt-10 h-[250px] sm:h-[360px]">
           {deck.map((g, k) => <FanCard key={g.src} g={g} k={k} n={deck.length} p={p} mobile={mobile} onOpen={() => setOpen(items.indexOf(g))} />)}
         </div>
-        <button onClick={() => setAll(true)} className="btn-gold mt-6">Explore experience <Icon.Arrow /></button>
+        <button onClick={() => setAll(true)} className="btn-gold mt-6 shadow-none hover:shadow-none">Explore experience <Icon.Arrow /></button>
       </div>
 
-      <AnimatePresence>
+      {createPortal(<AnimatePresence>
         {all && (
-          <motion.div className="fixed inset-0 z-[85] overflow-y-auto bg-[#2a0c06]/95 p-4 pt-20 backdrop-blur sm:p-10 sm:pt-24" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} data-lenis-prevent>
+          <motion.div className="fixed inset-0 z-[1100] overflow-y-auto bg-[#2a0c06]/95 p-4 pt-20 backdrop-blur sm:p-10 sm:pt-24" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} data-lenis-prevent>
             <button aria-label="Close gallery" onClick={() => setAll(false)} className="fixed right-5 top-5 z-10 grid h-11 w-11 place-items-center rounded-full border border-foam/25 bg-black/30 text-foam"><Icon.Close /></button>
             <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {items.map((g, i) => (
@@ -63,11 +94,11 @@ export default function Gallery() {
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>, document.body)}
 
-      <AnimatePresence>
+      {createPortal(<AnimatePresence>
         {open !== null && (
-          <motion.div className="fixed inset-0 z-[95] flex items-center justify-center bg-black/90 p-4 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(null)}>
+          <motion.div className="fixed inset-0 z-[1200] flex items-center justify-center bg-black/90 p-4 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(null)}>
             <motion.img key={open} src={items[open].src} alt={items[open].title} className="max-h-[82vh] max-w-full rounded-2xl object-contain" initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.4 }} onClick={(e) => e.stopPropagation()} />
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 font-display text-xl text-foam">{items[open].title}</div>
             <button aria-label="Close" className="absolute right-5 top-5 grid h-11 w-11 place-items-center rounded-full border border-foam/20 text-foam"><Icon.Close /></button>
@@ -75,7 +106,7 @@ export default function Gallery() {
             <button aria-label="Next" onClick={(e) => { e.stopPropagation(); setOpen((open + 1) % items.length) }} className="absolute right-4 grid h-11 w-11 place-items-center rounded-full border border-foam/20 text-foam"><Icon.Right /></button>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>, document.body)}
     </section>
   )
 }

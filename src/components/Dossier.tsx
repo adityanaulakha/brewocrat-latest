@@ -9,12 +9,12 @@ export default function Dossier({ onBook }: { onBook: (note?: string) => void })
   const [sel, setSel] = useState(0)
   const b = brewhouse[sel]
   return (
-    <section id="brewhouse" className="t-red wood grain relative overflow-hidden py-14 lg:py-20">
+    <section id="brewhouse" className="t-red wood grain relative overflow-hidden py-8 sm:py-12 lg:py-20">
       <div className="relative mx-auto max-w-7xl px-6 sm:px-10">
         <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-end">
           <div>
             <Reveal><span className="eyebrow">{dossier.eyebrow}</span></Reveal>
-            <SplitHeading text="The Tap" accent="Dossier" className="mt-3 font-display text-4xl font-bold text-foam sm:text-6xl" />
+            <SplitHeading text="The Tap" accent="Dossier" className="mt-3 font-display text-[2rem] font-bold leading-[1.05] text-foam sm:text-5xl" />
           </div>
           <Reveal delay={0.1}><p className="max-w-md font-sans text-sm leading-relaxed text-foam/65">{dossier.desc}</p></Reveal>
         </div>
@@ -29,10 +29,10 @@ export default function Dossier({ onBook }: { onBook: (note?: string) => void })
 
         <AnimatePresence mode="wait">
           <motion.div key={b.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.8, ease }}
-            className="card-glass mt-8 grid overflow-hidden rounded-2xl lg:grid-cols-2">
-            <div className="relative min-h-[280px] overflow-hidden">
-              <motion.img src={b.image} {...rs(b.image, '(min-width: 1024px) 40vw, 100vw')} loading="lazy" alt={b.name} className="absolute inset-0 h-full w-full object-cover" initial={{ scale: 1.04 }} animate={{ scale: 1 }} transition={{ duration: 2.4, ease }} />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-cask/70 max-lg:bg-gradient-to-t" />
+            className="lift mt-6 grid overflow-hidden rounded-2xl bg-cask lg:mt-8 lg:grid-cols-2">
+            <div className="relative min-h-[200px] overflow-hidden sm:min-h-[280px]">
+              <motion.img src={b.image} {...rs(b.image, '(min-width: 1024px) 40vw, 100vw')} loading="lazy" alt={b.name} className="absolute inset-0 h-full w-full object-cover" initial={{ scale: 1.02 }} animate={{ scale: 1 }} transition={{ duration: 1.4, ease }} />
+              <div className="photo-fade pointer-events-none absolute inset-0 lg:bg-none" />
               <div className="absolute bottom-5 left-5 flex flex-wrap gap-2">
                 {[b.abv, b.ibu, b.temp].map((t) => <span key={t} className="border border-honey/30 bg-ink/50 px-3 py-1.5 font-sans text-[10px] font-medium uppercase tracking-[0.3em] text-honey">{t}</span>)}
               </div>
@@ -54,15 +54,15 @@ export default function Dossier({ onBook }: { onBook: (note?: string) => void })
         <div className="mt-12">
           <div className="text-center">
             <Reveal><span className="eyebrow">{socialServes.eyebrow}</span></Reveal>
-            <SplitHeading text="Tabletop" accent="Social Formats" className="mt-3 font-display text-4xl font-bold text-foam sm:text-5xl" />
+            <SplitHeading text="Tabletop" accent="social formats" className="mt-3 font-display text-[2rem] font-bold leading-[1.05] text-foam sm:text-5xl" />
             <Reveal delay={0.1}><p className="mx-auto mt-4 max-w-xl font-sans text-sm text-foam/60">{socialServes.desc}</p></Reveal>
           </div>
           <div className="mt-12 grid gap-6 md:grid-cols-2">
             {socialServes.items.map((s, i) => (
               <Reveal key={s.title} delay={i * 0.12}>
-                <article className="t-olive group relative h-[360px] overflow-hidden rounded-2xl border border-brass/15">
-                  <img src={s.image} {...rs(s.image, '(min-width: 768px) 45vw, 100vw')} alt={s.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-[2.4s] ease-out group-hover:scale-[1.03]" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-transparent" />
+                <article className="lift t-olive group relative h-[280px] overflow-hidden rounded-2xl border border-brass/15 sm:h-[320px]">
+                  <img src={s.image} {...rs(s.image, '(min-width: 768px) 45vw, 100vw')} alt={s.title} loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+                  <div className="photo-fade pointer-events-none absolute inset-0" />
                   <div className="absolute inset-x-0 bottom-0 p-7 sm:p-9">
                     <span className="eyebrow">{s.eyebrow}</span>
                     <h4 className="mt-3 font-display text-3xl font-bold text-foam sm:text-4xl">{s.title}</h4>

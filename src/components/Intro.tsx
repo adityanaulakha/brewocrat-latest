@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { brand, contact, rating } from '../data/content'
+import { brand, contact } from '../data/content'
+import { backdropSlots } from '../data/backdrops'
 import { Reveal, SplitHeading } from './ui'
 import Backdrop from './Backdrop'
 import { rs } from '../lib/img'
@@ -51,38 +51,33 @@ function FlagMarquee() {
 }
 
 export default function Intro() {
-  const ref = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
-  const y = useTransform(scrollYProgress, [0, 1], ['-8%', '8%'])
-  const clip = useTransform(scrollYProgress, [0, 0.35], ['inset(6% 5% 6% 5% round 24px)', 'inset(0% 0% 0% 0% round 24px)'])
-
   return (
-    <section id="about" className="t-red relative overflow-hidden bg-ink">
-      <Backdrop src="/images/backdrops/about.webp" srcSet="/images/backdrops/about-800w.webp 800w, /images/backdrops/about.webp 1200w" tone="red" />
-      <div className="relative border-y border-brass/20 bg-black/5 py-3.5">
+    <section id="about" className="t-ivory relative overflow-hidden bg-ink">
+      <Backdrop slot={backdropSlots.about} />
+      <div className="relative z-10 border-y border-brass/20 bg-black/5 py-3">
         <FlagMarquee />
       </div>
 
-      <div ref={ref} className="relative mx-auto grid max-w-6xl items-center gap-8 px-5 py-12 sm:px-10 lg:min-h-[86svh] lg:grid-cols-[1fr_1.1fr] lg:gap-16 lg:py-14">
-        <motion.div style={{ clipPath: clip }} className="relative order-2 aspect-[4/3] overflow-hidden rounded-[24px] shadow-[0_40px_80px_-30px_rgba(20,4,2,.6)] lg:order-1 lg:aspect-[4/5] lg:max-h-[70svh]">
-          <motion.img style={{ y, scale: 1.18 }} src={brand.introImage.src} {...rs(brand.introImage.src, '(min-width: 1024px) 45vw, 100vw')} alt={brand.introImage.alt} className="h-full w-full object-cover" loading="lazy" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#3a120b]/60 via-transparent to-transparent" />
-          <span className="absolute bottom-5 left-5 font-sans text-[10px] uppercase tracking-[0.42em] text-foam/80">{brand.introImage.alt}</span>
-        </motion.div>
+      <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-6 px-5 py-8 sm:px-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16 lg:py-14">
+        <div className="lift relative order-2 aspect-[4/3] overflow-hidden rounded-[24px] lg:order-1 lg:aspect-[4/5] lg:max-h-[70svh]">
+          <img src={brand.introImage.src} {...rs(brand.introImage.src, '(min-width: 1024px) 45vw, 100vw')} alt={brand.introImage.alt} className="h-full w-full object-cover" loading="lazy" />
+          <div className="photo-fade pointer-events-none absolute inset-0" />
+          <span className="absolute bottom-5 left-5 max-w-[80%] font-sans text-[10px] uppercase tracking-[0.18em] text-[#F8ECD6]/90">{brand.introImage.alt}</span>
+        </div>
         <div className="order-1 lg:order-2">
           <Reveal><span className="eyebrow">About Brewocrat</span></Reveal>
           <SplitHeading text="Come for the taps," accent="stay for the live music." className="mt-3 font-display text-[2rem] font-bold leading-[1.08] text-foam sm:text-5xl" />
           <Reveal delay={0.15}><p className="mt-5 max-w-lg font-sans text-[15px] leading-[1.8] text-foam/80">{brand.intro}</p></Reveal>
           <Reveal delay={0.25}>
-            <div className="mt-7 grid grid-cols-3 rounded-2xl border border-brass/25 bg-black/10">
+            <div className="lift mt-7 grid grid-cols-3 rounded-2xl border border-brass/25 bg-cask/70">
               {[
                 { k: '4', v: 'House taps' },
-                { k: '12–1', v: 'PM to AM, daily' },
-                { k: '4.8', v: rating.replace('4.8 / 5 on ', '') },
+                { k: '12-1', v: 'PM to AM, daily' },
+                { k: '4.8', v: 'Google reviews' },
               ].map((s) => (
-                <div key={s.v} className="px-4 py-4 [&:not(:first-child)]:border-l [&:not(:first-child)]:border-brass/25">
-                  <div className="gold-text font-display text-3xl font-bold sm:text-4xl">{s.k}</div>
-                  <div className="mt-1 font-sans text-[9.5px] uppercase tracking-[0.25em] text-foam/70">{s.v}</div>
+                <div key={s.v} className="px-2 py-4 sm:px-4 [&:not(:first-child)]:border-l [&:not(:first-child)]:border-brass/25">
+                  <div className="text-brass font-display text-3xl font-bold sm:text-4xl">{s.k}</div>
+                  <div className="mt-1 font-sans text-[10px] leading-tight text-foam/90">{s.v}</div>
                 </div>
               ))}
             </div>

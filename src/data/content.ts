@@ -5,7 +5,7 @@ export const brand = {
   fullName: 'Brewocrat Brewery Skybar & Kitchen',
   tagline: 'Brewery. Skybar. Kitchen.',
   intro:
-    'Brewocrat is Gurugram’s rooftop brewery, skybar and kitchen, serving fresh beer brewed on-site with no preservatives. Come for the taps, stay for the live music, the open skyline and good company.',
+    'Gurugram’s rooftop brewery, skybar and kitchen. Beer brewed on-site, and live music under the open sky.',
   heroVideo: '/video/hero.mp4',
   heroPoster: '/video/hero-poster.webp',
   emblem: '/Logopng-02-300.webp',
@@ -55,20 +55,20 @@ export const tapNotes: Record<string, string> = {
 }
 
 export const plates = [
-  { title: 'Shahi Paneer Tikka Lababdar', category: 'Chef’s Claypot Specialty', price: '₹595', image: '/images/special-dish1.webp' },
-  { title: 'Smokey Mutton Rogan Josh', category: 'Signature Tandoor Hearth', price: '₹745', image: '/images/bhuna_gosht_curry.webp' },
-  { title: 'Dum Pukht Zafrani Biryani', category: 'Heritage Awadhi Handi', price: '₹645', image: '/images/special-dish3.webp' },
-  { title: 'Wood-Fired Truffle Margherita', category: 'Artisan Sourdough Pizza', price: '₹625', image: '/images/special-dish4.webp' },
-  { title: 'Big Fat Mezze Feast Platter', category: 'Mediterranean Sharing', price: '₹695', image: '/images/mediterranean_platter.webp' },
-  { title: 'Charcoal Smokey Mutton Tikkas', category: 'Sigri Charcoal Grills', price: '₹685', image: '/images/special-dish2.webp' },
+  { title: 'Shahi Paneer Tikka Lababdar', category: 'Chef’s Claypot Specialty', image: '/images/special-dish1.webp' },
+  { title: 'Smokey Mutton Rogan Josh', category: 'Signature Tandoor Hearth', image: '/images/bhuna_gosht_curry.webp' },
+  { title: 'Dum Pukht Zafrani Biryani', category: 'Heritage Awadhi Handi', image: '/images/special-dish3.webp' },
+  { title: 'Wood-Fired Truffle Margherita', category: 'Artisan Sourdough Pizza', image: '/images/special-dish4.webp' },
+  { title: 'Big Fat Mezze Feast Platter', category: 'Mediterranean Sharing', image: '/images/mediterranean_platter.webp' },
+  { title: 'Charcoal Smokey Mutton Tikkas', category: 'Sigri Charcoal Grills', image: '/images/special-dish2.webp' },
 ]
 
 export const moments = [
-  { title: 'FAMILY GATHERING', subtitle: 'Warm Comfort & Multi-Cuisine Feasts', desc: 'Generous dining tables, kid-friendly multi-cuisine favourites, intimate acoustics, and wood-fired sharing platters in our climate-controlled salon.', features: ['Spacious Family Booths', 'Kid-Friendly Menu Options', 'Intimate Acoustic Dining'], cta: 'Reserve Family Table', image: '/images/venue/6c597800757903f5a442c7ea37bd6c13.webp' },
-  { title: 'CORPORATE MEETING', subtitle: 'Productive Mixers & Team Celebrations', desc: 'High-speed Wi-Fi, private lounge zones, fresh craft draught beer on flow, and curated multi-course business buffets for company celebrations & mixers.', features: ['AV Presentation Support', 'Curated Corporate Packages', 'GST Billing Ready'], cta: 'Book Corporate Event', image: '/images/venue/512291b716cdc11a22c515ae092cbdcb.webp' },
-  { title: 'DJ SETS', subtitle: 'High-Voltage Weekend Nightlife', desc: 'Live resident & guest DJs spinning commercial Bollywood, Punjabi club hits & electronic house under Gurugram’s starry skybar terrace.', features: ['Weekend Live DJs', 'Concert-Grade Acoustics', 'Signature Cocktail Pitchers'], cta: 'Reserve Party Lounge', image: '/images/venue/800dea653d01ee7809661aa6055d96ca.webp' },
-  { title: 'GATHERINGS', subtitle: 'Breezy Courtyard Socials & Sundowners', desc: 'Open-air courtyard energy, 3-litre craft beer towers at the table, live sports screenings on giant displays, and casual high-top tables for your crew.', features: ['Fairy-Lit Pergola Seating', 'Live Match Screenings', 'Ice-Cored Beer Towers'], cta: 'Gather Your Crew', image: '/images/venue/7cbf0f9e69ab18ec07dea52f3766ab4a.webp' },
-  { title: 'PARTIES', subtitle: 'Birthdays, Anniversaries & Milestones', desc: 'Bespoke party decor, dedicated bar team, custom celebration cake presentation, and private terrace cabanas for your unforgettable milestone.', features: ['Private Terrace Cabanas', 'Dedicated Service Butler', 'Tailored Celebration Menus'], cta: 'Plan A Celebration', image: '/images/slider-1.webp' },
+  { title: 'Family gathering', subtitle: 'Shared tables in the salon', desc: 'Family booths, kid-friendly plates, and wood-fired platters.', features: ['Family booths', 'Kid-friendly plates', 'Quieter dining'], cta: 'Reserve Family Table', image: '/images/venue/6c597800757903f5a442c7ea37bd6c13.webp' },
+  { title: 'Corporate meeting', subtitle: 'Mixers and team tables', desc: 'Wi-Fi, a private lounge, and draught beer for the team.', features: ['AV support', 'Group packages', 'GST billing'], cta: 'Book Corporate Event', image: '/images/venue/512291b716cdc11a22c515ae092cbdcb.webp' },
+  { title: 'DJ sets', subtitle: 'Weekends on the skybar', desc: 'Resident and guest DJs on the terrace.', features: ['Weekend DJs', 'Courtyard sound', 'Cocktail pitchers'], cta: 'Reserve Party Lounge', image: '/images/venue/800dea653d01ee7809661aa6055d96ca.webp' },
+  { title: 'Gatherings', subtitle: 'Courtyard sundowners', desc: 'Open-air tables, beer towers, and match screenings.', features: ['Pergola seating', 'Match screenings', 'Beer towers'], cta: 'Gather Your Crew', image: '/images/venue/7cbf0f9e69ab18ec07dea52f3766ab4a.webp' },
+  { title: 'Parties', subtitle: 'Birthdays and milestones', desc: 'A private terrace setup for the celebration.', features: ['Terrace cabanas', 'Dedicated service', 'Celebration menus'], cta: 'Plan A Celebration', image: '/images/slider-1.webp' },
 ]
 
 export const universes = [
@@ -80,7 +80,7 @@ export const universes = [
 export const testimonials = [
   { text: 'Brewocrat is hands down the best microbrewery in Gurgaon! The Belgian Tropical Ale was poured frost cold and had the most incredible citrus aroma. The Smokey Mutton Tikka paired with the rooftop breeze made it an unforgettable evening.', author: 'Rohan Verma', role: 'Verified Google Patron', date: 'February 2025' },
   { text: 'The aesthetic of this rooftop is unmatched. Warm amber lighting, copper brewery tanks, and plush seating. Loved the Big Fat Mezze Platter and the wood-fired pizza. Great live DJ and cricket screening vibe!', author: 'Priya Sharma', role: 'Gurgaon Food & Nightlife Critic', date: 'January 2025' },
-  { text: 'Outstanding hospitality from start to finish. We booked a 3L beer tower for our team gathering — the ice core kept it cold for hours. The craft cocktails like Indian Sapphire are works of art.', author: 'Amit Gupta', role: 'Regular Guest', date: 'March 2025' },
+  { text: 'Outstanding hospitality from start to finish. We booked a 3L beer tower for our team gathering - the ice core kept it cold for hours. The craft cocktails like Indian Sapphire are works of art.', author: 'Amit Gupta', role: 'Regular Guest', date: 'March 2025' },
 ]
 
 export const rating = '4.8 / 5 on Google Reviews'
@@ -99,7 +99,7 @@ export const interiors = [
 export const dossier = {
   eyebrow: 'POURING LIVE TODAY',
   title: 'The Tap Dossier',
-  desc: 'Select any tap to examine tasting notes, aromatic character, and chef-recommended food pairings.',
+  desc: 'Choose a tap for notes and pairings.',
   notesLabel: 'Aromatic Tasting Notes',
   pairingsLabel: 'Perfect Food Pairings',
   cta: 'Order A Pitcher at Table',
@@ -107,17 +107,17 @@ export const dossier = {
 export const socialServes = {
   eyebrow: 'DESIGNED FOR THE TABLE',
   title: 'Tabletop Social Formats',
-  desc: 'Craft beer is meant to be shared. Experience our curated social serves.',
+  desc: 'Beer made to share.',
   items: [
-    { eyebrow: 'THE TASTING RACK', title: 'Flight Paddles', desc: 'Cannot decide? Order a wooden flight paddle featuring 4 or 6 tasting chalices of each fresh tap, guided by notes from our master brewer.', cta: 'Reserve Tasting Flight', image: '/images/venue/ea3adbabd87e47ffa47e0f6e33394a2d.webp' },
-    { eyebrow: 'THE GROUP ANCHOR', title: '3-Litre Ice-Cored Towers', desc: 'Keep the party pouring straight at your table. Our illuminated 3-litre tabletop beer towers feature an integrated ice core that maintains a 2°C chilled pour down to the final glass.', cta: 'Book Table With Beer Tower', image: '/images/craft_beer_tower.webp' },
+    { eyebrow: 'THE TASTING RACK', title: 'Flight Paddles', desc: 'A paddle of 4 or 6 house taps.', cta: 'Reserve Tasting Flight', image: '/images/venue/ea3adbabd87e47ffa47e0f6e33394a2d.webp' },
+    { eyebrow: 'THE GROUP ANCHOR', title: '3-Litre Ice-Cored Towers', desc: 'A 3-litre table tower with an ice core.', cta: 'Book Table With Beer Tower', image: '/images/craft_beer_tower.webp' },
   ],
 }
 // From the site's /events page
 export const eventsCopy = {
   eyebrow: 'WEEKLY LIVE PROGRAMMING',
   title: ['What\u2019s On At ', 'Brewocrat.'],
-  desc: 'From Wednesday unplugged sufi sets and retro mixtape nights to high-energy Friday Bollywood and Saturday live euphoria, our stage brings Gurugram together every night.',
+  desc: 'Unplugged Wednesdays, mixtape Thursdays, and Bollywood Fridays.',
   headlinerEyebrow: 'THIS WEEK\u2019S HEADLINER',
   headliner: 'Friday Bollywood & Punjabi Night',
   headlinerMeta: 'Featuring DJ Sumit Live • 8:00 PM Onwards',
