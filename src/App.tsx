@@ -58,12 +58,14 @@ export default function App() {
     <>
       <AnimatePresence>{loading && <Preloader onDone={done} />}</AnimatePresence>
       <Nav onBook={openBook} />
-      <Routes>
-        <Route path="/" element={<Home ready={ready} onBook={openBook} />} />
-        <Route path="/menu" element={<Suspense fallback={<div className="min-h-screen bg-ink" />}><MenuPage onBook={() => openBook()} /></Suspense>} />
-        <Route path="*" element={<Home ready={ready} onBook={openBook} />} />
-      </Routes>
-      <Footer />
+      <div className="page-layer">
+        <Routes>
+          <Route path="/" element={<Home ready={ready} onBook={openBook} />} />
+          <Route path="/menu" element={<Suspense fallback={<div className="min-h-screen bg-ink" />}><MenuPage onBook={() => openBook()} /></Suspense>} />
+          <Route path="*" element={<Home ready={ready} onBook={openBook} />} />
+        </Routes>
+        <Footer />
+      </div>
       <BookModal open={book} onClose={() => setBook(false)} preset={note} />
     </>
   )

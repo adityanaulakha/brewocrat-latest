@@ -143,7 +143,7 @@ export default function Nav({ onBook }: { onBook: (n?: string) => void }) {
   const pick = (it: Item) => { setOpen(null); it.go() }
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+    <header className="site-nav pointer-events-none fixed inset-x-0 top-0">
       <div className="flex justify-center px-4 pt-3 sm:px-4 sm:pt-6">
         <div ref={topbarRef} data-topbar
           className={`pointer-events-auto relative flex h-14 w-full max-w-[560px] items-stretch overflow-visible rounded-full border transition-colors duration-500 sm:h-16 ${

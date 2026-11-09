@@ -38,7 +38,7 @@ export default function BookModal({ open, onClose, preset }: { open: boolean; on
   return (
     <AnimatePresence>
       {open && (
-        <motion.div className="fixed inset-0 z-[80] flex items-end justify-center sm:items-center sm:p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+        <motion.div className="fixed inset-0 z-[1100] flex items-end justify-center sm:items-center sm:p-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
           <div className="absolute inset-0 bg-black/75" onClick={onClose} />
           <motion.div role="dialog" aria-modal="true" aria-label="Book a table"
             className="relative max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-3xl border border-brass/20 bg-gradient-to-b from-malt to-cask p-6 shadow-2xl sm:rounded-3xl sm:p-10"

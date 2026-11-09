@@ -23,6 +23,9 @@ h1.font-display, h2.font-display, .h-display { font-weight: 700; font-variation-
 .sub { font-family: Fraunces, Georgia, serif; font-style: italic; font-weight: 600; }
 ::selection { background: #D4A64A; color:#34100A; color: #FBF3E6; }
 section[id] { scroll-margin-top: 5.5rem; }
+/* Above every section, including transformed cards. Not inside a transformed ancestor. */
+.site-nav { z-index: 1000; isolation: isolate; }
+.page-layer { position: relative; z-index: 0; isolation: isolate; }
 
 @layer components {
   .gold-text, .accent { color: rgb(var(--c-brass)); }
