@@ -29,6 +29,8 @@ section[id] { scroll-margin-top: 5.5rem; }
 
 @layer components {
   .gold-text, .accent { color: rgb(var(--c-brass)); }
+  /* Journal heading only: production uses this pair on the accent words. */
+  .gold-text.italic { font-family: 'Dancing Script', cursive; font-style: normal; font-weight: 700; text-transform: none; letter-spacing: 0; font-size: 1.08em; }
   .eyebrow { @apply font-sans text-[10px] sm:text-[11px] font-extrabold uppercase tracking-[0.26em] text-brass; }
   .h-display { @apply font-display font-bold leading-[1] tracking-[-0.01em]; }
   /* Raised, not glassy: a short shadow, and a faint brass glow only while the pointer is on a gold button. */

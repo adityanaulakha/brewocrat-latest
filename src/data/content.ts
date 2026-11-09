@@ -129,7 +129,7 @@ export const eventsCopy = {
 export const galleryCopy = {
   eyebrow: 'THE BREWOCRAT JOURNAL',
   title: ['Brewed for ', 'good company.'],
-  desc: 'Fresh taps, long tables, and nights in Gurugram.',
+  desc: 'A visual taste of fresh taps, long tables, open kitchens, and the nights that keep Gurugram coming back.',
 }
 // From the site's /book-table page
 export const bookingCopy = {
