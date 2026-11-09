@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useMotionValue, useScroll, useTransform, type MotionValue } from 'framer-motion'
 import { gallery } from '../data/extracted'
 import { galleryCopy, interiors } from '../data/content'
 import { Icon, Reveal, SplitHeading } from './ui'
@@ -22,7 +22,13 @@ type FanLayout = {
   drop: number
   rise: number
   tilt: number
+  /** How far the stack sits below the open arc, so the fan can rise without leaving the stage. */
+  stack: number
+  /** Hover lift. Kept inside `rise`, so a card never climbs out of the section. */
+  lift: number
 }
+
+const HOVER_LIFT = 22
 
 /** Fit a shallow, even arc inside the stage. Edges may kiss the sides; they do not leave the viewport. */
 function layoutFor(width: number): FanLayout {
@@ -34,7 +40,8 @@ function layoutFor(width: number): FanLayout {
   const factor = 1 + (n - 1) * stepRatio + extra
   const cardW = Math.min(200, Math.max(112, (width - 8) / factor))
   const cardH = cardW * (7 / 5)
-  const rise = Math.ceil((cardW / 2) * Math.sin(theta) + 12)
+  const lift = HOVER_LIFT
+  const rise = Math.ceil((cardW / 2) * Math.sin(theta) + lift + 8)
   return {
     cardW,
     cardH,
@@ -42,11 +49,87 @@ function layoutFor(width: number): FanLayout {
     drop: Math.round(cardH * 0.065),
     rise,
     tilt,
+    stack: 46,
+    lift,
   }
 }
 
-function Fan({ onOpen }: { onOpen: (i: number) => void }) {
+function FanCard({
+  g, k, n, layout, p, hover, onOpen, reduce,
+}: {
+  g: (typeof items)[number]
+  k: number
+  n: number
+  layout: FanLayout
+  p: MotionValue<number>
+  /** -1 when nothing is hovered. */
+  hover: MotionValue<number>
+  onOpen: () => void
+  reduce: boolean
+}) {
+  const maxC = (n - 1) / 2
+  const c = k - maxC
+  const t = maxC === 0 ? 0 : c / maxC
+  const arcX = c * layout.step
+  const arcY = t * t * layout.drop
+  const arcRot = t * layout.tilt
+  const jitter = ((k % 3) - 1) * 3.5
+
+  const x = useTransform([p, hover], ([v, h]: number[]) => {
+    let nx = arcX * v
+    if (!reduce && h >= 0 && h !== k) {
+      const dir = k < h ? -1 : 1
+      nx += dir * (Math.abs(k - h) === 1 ? 22 : 10)
+    }
+    return nx
+  })
+  const y = useTransform([p, hover], ([v, h]: number[]) => {
+    const base = arcY * v + layout.stack * (1 - v)
+    if (!reduce && h === k) return Math.max(base - layout.lift, 4 - layout.rise)
+    return base
+  })
+  const rotate = useTransform([p, hover], ([v, h]: number[]) => {
+    const base = arcRot * v + jitter * (1 - v)
+    if (!reduce && h === k) return base * 0.08
+    if (!reduce && h >= 0) return base + (k < h ? -1.8 : 1.8)
+    return base
+  })
+  const scale = useTransform([p, hover], ([, h]: number[]) => (!reduce && h === k ? 1.06 : 1))
+  const zIndex = useTransform(hover, (h) => (h === k ? 12 : 1 + Math.round(maxC - Math.abs(c))))
+
+  return (
+    <motion.button
+      type="button"
+      aria-label={g.title}
+      onClick={onOpen}
+      onHoverStart={() => { if (!reduce) hover.set(k) }}
+      onHoverEnd={() => { if (hover.get() === k) hover.set(-1) }}
+      onPointerDown={(e) => { if (!reduce && e.pointerType === 'touch') hover.set(k) }}
+      onPointerUp={(e) => { if (e.pointerType === 'touch' && hover.get() === k) hover.set(-1) }}
+      onPointerCancel={() => { if (hover.get() === k) hover.set(-1) }}
+      style={{
+        width: layout.cardW,
+        height: layout.cardH,
+        left: '50%',
+        top: layout.rise,
+        marginLeft: -layout.cardW / 2,
+        x, y, rotate, scale, zIndex,
+        originY: 1,
+      }}
+      className="absolute overflow-hidden rounded-[18px] bg-cask shadow-[0_18px_36px_-16px_rgba(20,4,2,.6)] ring-1 ring-[#DEB258]/40"
+    >
+      <img src={g.src} {...rs(g.src, `${Math.round(layout.cardW)}px`)} alt={g.title} loading="lazy" className="h-full w-full object-cover" />
+      <div className="photo-fade pointer-events-none absolute inset-0 opacity-70" />
+      <span className="pointer-events-none absolute inset-2 rounded-[12px] border border-[#F3D79A]/30" />
+    </motion.button>
+  )
+}
+
+function Fan({ onOpen, reduce }: { onOpen: (i: number) => void; reduce: boolean }) {
   const stage = useRef<HTMLDivElement>(null)
+  const hover = useMotionValue(-1)
+  const { scrollYProgress } = useScroll({ target: stage, offset: ['start 96%', 'center 58%'] })
+  const p = useTransform(scrollYProgress, (v) => (reduce ? 1 : Math.min(1, Math.max(0, v))))
   const [layout, setLayout] = useState<FanLayout>(() => layoutFor(1024))
 
   useLayoutEffect(() => {
@@ -59,77 +142,53 @@ function Fan({ onOpen }: { onOpen: (i: number) => void }) {
     return () => ro.disconnect()
   }, [])
 
-  const n = fanDeck.length
-  const maxC = (n - 1) / 2
-  const stageH = layout.rise + layout.cardH + layout.drop + 16
+  const stageH = layout.rise + layout.stack + layout.cardH + layout.drop + 20
 
   return (
     <div ref={stage} className="relative mx-auto mt-8 hidden w-full max-w-[1440px] overflow-hidden md:block" style={{ height: stageH }}>
-      {fanDeck.map((g, k) => {
-        const c = k - maxC
-        const t = maxC === 0 ? 0 : c / maxC
-        const arcY = t * t * layout.drop
-        /* 2D only. No translateZ, and the z-index stays inside the isolated section. */
-        const transform = `translate(${c * layout.step}px, ${arcY}px) rotate(${t * layout.tilt}deg)`
-        return (
-          <div
-            key={g.src}
-            className="absolute origin-bottom"
-            style={{
-              width: layout.cardW,
-              height: layout.cardH,
-              left: '50%',
-              top: layout.rise,
-              marginLeft: -layout.cardW / 2,
-              transform,
-              zIndex: 1 + Math.round(maxC - Math.abs(c)),
-            }}
-          >
-            <button
-              type="button"
-              aria-label={g.title}
-              onClick={() => onOpen(items.indexOf(g))}
-              className="h-full w-full overflow-hidden rounded-[18px] bg-cask shadow-[0_18px_36px_-16px_rgba(20,4,2,.6)] ring-1 ring-[#DEB258]/40"
-            >
-              <img src={g.src} {...rs(g.src, `${Math.round(layout.cardW)}px`)} alt={g.title} loading="lazy" className="h-full w-full object-cover" />
-              <div className="photo-fade pointer-events-none absolute inset-0 opacity-70" />
-              <span className="pointer-events-none absolute inset-2 rounded-[12px] border border-[#F3D79A]/30" />
-            </button>
-          </div>
-        )
-      })}
+      {fanDeck.map((g, k) => (
+        <FanCard key={g.src} g={g} k={k} n={fanDeck.length} layout={layout} p={p} hover={hover} reduce={reduce} onOpen={() => onOpen(items.indexOf(g))} />
+      ))}
     </div>
   )
 }
 
 export default function Gallery() {
+  const section = useRef<HTMLElement>(null)
   const [open, setOpen] = useState<number | null>(null)
   const [all, setAll] = useState(false)
   const [reduce] = useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches)
+  const { scrollYProgress } = useScroll({ target: section, offset: ['start 88%', 'start 30%'] })
+  const p = useTransform(scrollYProgress, (v) => {
+    if (reduce) return 1
+    const k = Math.min(1, Math.max(0, v))
+    return k * k * (3 - 2 * k)
+  })
+  const rowY = useTransform(p, (v) => (reduce ? 0 : (1 - v) * 18))
 
   return (
-    <section id="gallery" className="t-red relative overflow-x-clip bg-ink px-5 pb-14 pt-28 sm:px-8 sm:pb-16 sm:pt-28 lg:px-10 lg:pb-20" style={{ isolation: 'isolate', zIndex: 0 }}>
+    <section ref={section} id="gallery" className="t-red relative overflow-x-clip bg-ink px-5 pb-14 pt-28 sm:px-8 sm:pb-16 sm:pt-28 lg:px-10 lg:pb-20" style={{ isolation: 'isolate', zIndex: 0 }}>
       <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(60% 50% at 50% 55%, rgba(212,166,74,.14), transparent 68%)' }} />
       <div className="relative mx-auto w-full max-w-6xl text-center">
         <Reveal><span className="eyebrow">{galleryCopy.eyebrow}</span></Reveal>
         <SplitHeading text={galleryCopy.title[0].trim()} accent={galleryCopy.title[1]} className="mt-3 font-display text-[2rem] font-bold leading-[1.05] text-foam sm:text-5xl" />
         <Reveal delay={0.05}><p className="mx-auto mt-3 max-w-md font-sans text-sm leading-relaxed text-foam/75">{galleryCopy.desc}</p></Reveal>
 
-        <div className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-3 no-scrollbar md:hidden">
+        <motion.div style={{ y: rowY }} className="mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-3 no-scrollbar md:hidden">
           {fanDeck.map((g) => (
             <button
               key={g.src}
               type="button"
               aria-label={g.title}
               onClick={() => setOpen(items.indexOf(g))}
-              className="aspect-[5/7] w-36 shrink-0 snap-start overflow-hidden rounded-[18px] bg-cask shadow-[0_16px_32px_-16px_rgba(20,4,2,.55)] ring-1 ring-[#DEB258]/40"
+              className="aspect-[5/7] w-36 shrink-0 snap-start overflow-hidden rounded-[18px] bg-cask shadow-[0_16px_32px_-16px_rgba(20,4,2,.55)] ring-1 ring-[#DEB258]/40 active:scale-[0.98]"
             >
               <img src={g.src} {...rs(g.src, '144px')} alt={g.title} loading="lazy" className="h-full w-full object-cover" />
             </button>
           ))}
-        </div>
+        </motion.div>
 
-        <Fan onOpen={setOpen} />
+        <Fan onOpen={setOpen} reduce={reduce} />
         <button type="button" onClick={() => setAll(true)} className="btn-gold mt-8">Explore experience <Icon.Arrow /></button>
       </div>
 
