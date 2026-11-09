@@ -1,26 +1,32 @@
-import { useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Icon, Reveal, SplitHeading } from './ui'
+import { brand } from '../data/content'
+import { backdropSlots } from '../data/backdrops'
+import { gsap, ScrollTrigger } from '../lib/motion'
 import { scrollToId } from '../lib/scroll'
+import Backdrop from './Backdrop'
+import { Icon, Reveal, SplitHeading } from './ui'
 
-/* Alchemist LinksSection pattern: 3-up grid of ~70svh cards with a 3D flip (twister) to a CTA backside. */
+/* Scroll-entry 3D turn, matched to the Alchemist LinksSection:
+   desktop plays rotationY -180 → 0 over 2s (back.out, stagger .5) and reverses on the way up;
+   mobile scrubs the same turn per card. The face you read is the front; the back is only the turn. */
 const cards = [
-  { key: 'experience', eyebrow: 'Venue & parties', title: 'Explore the', accent: 'experience', line: 'Courtyard toasts, skybar sundowners, DJ nights and private celebrations.', cta: 'Plan an evening', video: '/video/cards/experience.mp4', poster: '/video/cards/experience.webp', to: 'moments' },
-  { key: 'food', eyebrow: 'The kitchen', title: 'Explore our', accent: 'food', line: 'Wood-fired pizzas, sigri grills, claypot curries and Mediterranean sharing platters.', cta: 'See the food menu', video: '/video/cards/food.mp4', poster: '/video/cards/food.webp', to: '/menu' },
-  { key: 'drinks', eyebrow: 'The bar', title: 'Explore our', accent: 'drinks', line: 'Four house-brewed taps, 3-litre towers, craft cocktails and a deep spirits list.', cta: 'See the drinks menu', video: '/video/cards/drinks.mp4', poster: '/video/cards/drinks.webp', to: '/menu?tab=drinks' },
+  { key: 'experience', eyebrow: 'Venue & parties', title: 'Explore the', accent: 'experience', line: 'Courtyard, skybar, and private tables.', cta: 'Plan an evening', video: '/video/cards/experience.mp4', poster: '/video/cards/experience.webp', to: 'moments' },
+  { key: 'food', eyebrow: 'The kitchen', title: 'Explore our', accent: 'food', line: 'Wood-fired, sigri, and claypot plates.', cta: 'See the food menu', video: '/video/cards/food.mp4', poster: '/video/cards/food.webp', to: '/menu' },
+  { key: 'drinks', eyebrow: 'The bar', title: 'Explore our', accent: 'drinks', line: 'House taps, towers, and cocktails.', cta: 'See the drinks menu', video: '/video/cards/drinks.mp4', poster: '/video/cards/drinks.webp', to: '/menu?tab=drinks' },
 ]
 
 function LoopVideo({ src, poster }: { src: string; poster: string }) {
   const ref = useRef<HTMLVideoElement>(null)
   const [reduce] = useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches)
-  useEffect(() => {
+  useLayoutEffect(() => {
     const v = ref.current
     if (!v || reduce) return
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) { if (!v.getAttribute('src')) v.src = src; v.play().catch(() => {}) } else v.pause()
     }, { rootMargin: '200px' })
-    io.observe(v); return () => io.disconnect()
+    io.observe(v)
+    return () => io.disconnect()
   }, [src, reduce])
   return (
     <>
@@ -30,56 +36,108 @@ function LoopVideo({ src, poster }: { src: string; poster: string }) {
   )
 }
 
-function FlipCard({ c }: { c: (typeof cards)[number] }) {
-  const [flipped, setFlipped] = useState(false)
+function CardFace({ c }: { c: (typeof cards)[number] }) {
   const nav = useNavigate()
   const go = () => (c.to.startsWith('/') ? nav(c.to) : scrollToId(c.to))
   return (
-    <div className="ls-twister group relative h-[min(70svh,560px)] w-full [perspective:2000px]"
-      onMouseEnter={() => setFlipped(true)} onMouseLeave={() => setFlipped(false)}>
-      <motion.div className="relative h-full w-full [transform-style:preserve-3d]"
-        animate={{ rotateY: flipped ? 180 : 0 }} transition={{ duration: 0.7, ease: [0.25, 1, 0.5, 1] }}>
-        {/* front */}
-        <article className="absolute inset-0 overflow-hidden rounded-[28px] border-2 border-[#3A120B]/15 [backface-visibility:hidden]">
-          <div className="absolute inset-0 scale-[1.02]"><LoopVideo src={c.video} poster={c.poster} /></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#2a0c06]/85 via-[#2a0c06]/15 to-transparent" />
-          <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8">
-            <div className="eyebrow !text-[#DEB258]">{c.eyebrow}</div>
+    <div className="h-[min(68svh,540px)] w-full [perspective:2000px] lg:h-[min(70svh,560px)]">
+      <div className="ls-link relative h-full w-full">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-[28px] border border-[#DEB258]/25 bg-[#2A3018] [backface-visibility:hidden] [transform:rotateY(180deg)_translateZ(45px)]"
+        >
+          <img src={brand.navEmblem} alt="" className="h-16 w-16 object-contain opacity-90 drop-shadow-[0_6px_16px_rgba(58,18,11,.25)]" />
+        </div>
+        <article className="absolute inset-0 overflow-hidden rounded-[28px] shadow-[0_22px_44px_-24px_rgba(28,30,16,.6)] [backface-visibility:hidden] [transform:translateZ(1px)] [transform-style:preserve-3d]">
+          <div className="absolute inset-[-8%] [transform:translateZ(-40px)]">
+            <LoopVideo src={c.video} poster={c.poster} />
+          </div>
+          <div className="photo-fade pointer-events-none absolute inset-0" />
+          <div className="relative z-10 flex h-full flex-col justify-between p-6 [transform:translateZ(40px)] sm:p-7">
+            <div className="font-sans text-[10px] font-extrabold uppercase tracking-[0.26em] text-[#DEB258]">{c.eyebrow}</div>
             <div>
-              <h3 className="font-display text-[1.85rem] font-bold leading-[1.05] text-[#F8ECD6] sm:text-[2.1rem]">
-                {c.title} <span className="accent text-[#DEB258]">{c.accent}</span>
+              <h3 className="font-display text-[1.7rem] font-bold leading-[1.05] text-[#F8ECD6] sm:text-[2rem]">
+                {c.title} <span className="text-[#DEB258]">{c.accent}</span>
               </h3>
-              <button onClick={() => setFlipped(true)} className="mt-4 inline-flex items-center gap-2 font-sans text-[11px] font-bold uppercase tracking-[0.2em] text-[#F8ECD6]/90 sm:hidden">
-                Flip for more <Icon.Arrow className="h-3.5 w-3.5" />
-              </button>
+              <p className="mt-2 max-w-[16rem] font-sans text-[13px] leading-snug text-[#F8ECD6]/85">{c.line}</p>
+              <button type="button" onClick={go} className="btn-gold mt-4">{c.cta} <Icon.Arrow className="h-3.5 w-3.5" /></button>
             </div>
           </div>
         </article>
-        {/* back — Alchemist-style solid face with CTA */}
-        <article className="absolute inset-0 flex flex-col items-center justify-center overflow-hidden rounded-[28px] border-2 border-[#8F2E1C]/40 bg-[#E9DCC4] px-7 text-center [backface-visibility:hidden] [transform:rotateY(180deg)_translateZ(1px)]">
-          <div className="eyebrow !text-[#8F2E1C]">{c.eyebrow}</div>
-          <h3 className="mt-3 font-display text-[1.85rem] font-bold leading-[1.05] text-[#3A120B]">
-            {c.title} <span className="accent text-[#8F2E1C]">{c.accent}</span>
-          </h3>
-          <p className="mt-4 max-w-xs font-sans text-[14px] leading-relaxed text-[#3A120B]/75">{c.line}</p>
-          <button onClick={go} className="btn-gold mt-7 !bg-[#8F2E1C] !text-[#F8ECD6]">{c.cta} <Icon.Arrow className="h-3.5 w-3.5" /></button>
-          <button onClick={() => setFlipped(false)} className="mt-4 font-sans text-[10px] uppercase tracking-[0.25em] text-[#8F2E1C]/70 sm:hidden">Flip back</button>
-        </article>
-      </motion.div>
+      </div>
     </div>
   )
 }
 
 export default function ExperienceCards() {
+  const root = useRef<HTMLDivElement>(null)
+
+  useLayoutEffect(() => {
+    const el = root.current
+    if (!el) return
+    const links = Array.from(el.querySelectorAll<HTMLElement>('.ls-link'))
+    if (!links.length) return
+
+    const mm = gsap.matchMedia()
+    const motion = '(prefers-reduced-motion: no-preference)'
+
+    mm.add('(prefers-reduced-motion: reduce)', () => {
+      gsap.set(links, { clearProps: 'transform' })
+    })
+
+    mm.add(`${motion} and (min-width: 1024px)`, () => {
+      const tl = gsap.timeline({
+        paused: true,
+        scrollTrigger: {
+          trigger: links[0].parentElement,
+          start: 'top 70%',
+          end: 'top 10%',
+          toggleActions: 'play none none reverse',
+        },
+      })
+      tl.fromTo(links, { rotationY: -180 }, {
+        rotationY: 0,
+        duration: 2,
+        ease: 'back.out',
+        stagger: { amount: 0.5, from: 'start' },
+      })
+    })
+
+    mm.add(`${motion} and (max-width: 1023px)`, () => {
+      links.forEach((link) => {
+        gsap.fromTo(link, { rotationY: -180 }, {
+          rotationY: 0,
+          duration: 2,
+          ease: 'power2.out',
+          scrollTrigger: {
+            trigger: link,
+            start: 'center bottom',
+            end: 'bottom bottom',
+            scrub: 1,
+          },
+        })
+      })
+    })
+
+    const refresh = () => ScrollTrigger.refresh()
+    document.fonts.ready.then(refresh)
+    window.addEventListener('load', refresh)
+    return () => {
+      window.removeEventListener('load', refresh)
+      mm.revert()
+    }
+  }, [])
+
   return (
-    <section id="experience" className="t-red relative overflow-hidden bg-ink py-14 lg:py-20">
-      <div className="relative mx-auto max-w-6xl px-5 sm:px-10">
+    <section id="experience" className="t-ivory relative overflow-x-clip bg-ink py-8 sm:py-12 lg:py-20">
+      <Backdrop slot={backdropSlots.experience} />
+      <div className="relative z-10 mx-auto max-w-6xl px-5 sm:px-10">
         <div className="text-center">
           <Reveal><span className="eyebrow">Experience · Food · Drinks</span></Reveal>
-          <SplitHeading text="One address," accent="three ways in." className="mt-3 font-display text-3xl font-bold text-foam sm:text-5xl" />
+          <SplitHeading text="One address," accent="three ways in." className="mt-3 font-display text-[2rem] font-bold leading-[1.05] text-foam sm:text-5xl" />
         </div>
-        <div className="mt-8 grid gap-5 md:grid-cols-3 md:gap-6">
-          {cards.map((c) => <FlipCard key={c.key} c={c} />)}
+        <div ref={root} className="mt-6 grid gap-4 lg:mt-8 lg:grid-cols-3 lg:gap-6">
+          {cards.map((c) => <CardFace key={c.key} c={c} />)}
         </div>
       </div>
     </section>

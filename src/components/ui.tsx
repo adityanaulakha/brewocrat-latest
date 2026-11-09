@@ -1,33 +1,27 @@
-import { motion, type Variants } from 'framer-motion'
+import { motion } from 'framer-motion'
 import type { ReactNode } from 'react'
 
 export const ease = [0.22, 1, 0.36, 1] as const
 
-export function Reveal({ children, delay = 0, y = 14, className = '', once = true }: { children: ReactNode; delay?: number; y?: number; className?: string; once?: boolean }) {
+export function Reveal({ children, delay = 0, y = 10, className = '', once = true }: { children: ReactNode; delay?: number; y?: number; className?: string; once?: boolean }) {
   return (
     <motion.div className={className} initial={{ opacity: 0, y }} whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once, margin: '-80px' }} transition={{ duration: 1.4, delay, ease: [0.25, 0.1, 0.25, 1] }}>
+      viewport={{ once, margin: '-40px' }} transition={{ duration: 0.45, delay, ease: [0.25, 0.1, 0.25, 1] }}>
       {children}
     </motion.div>
   )
 }
 
-// headings settle in with a slow, quiet fade (no slide-up per word)
-const wordV: Variants = { hidden: { opacity: 0, y: 8 }, show: (i: number) => ({ opacity: 1, y: 0, transition: { duration: 1.4, delay: i * 0.05, ease: [0.25, 0.1, 0.25, 1] } }) }
-
+/** One continuous line. Accent words share the face and size; only the colour changes, and they are opaque immediately. */
 export function SplitHeading({ text, className = '', accent, as: Tag = 'h2' }: { text: string; className?: string; accent?: string; as?: 'h1' | 'h2' | 'h3' }) {
   const words = text.split(' ')
   const accWords = accent ? accent.split(' ') : []
   const all = [...words.map((w) => ({ w, a: false })), ...accWords.map((w) => ({ w, a: true }))]
   return (
     <Tag className={className}>
-      <motion.span className="inline" initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}>
-        {all.map(({ w, a }, i) => (
-          <span key={i} className="inline-block pb-[0.08em] align-bottom">
-            <motion.span custom={i} variants={wordV} className={`inline-block ${a ? 'gold-text italic' : ''}`}>{w}&nbsp;</motion.span>
-          </span>
-        ))}
-      </motion.span>
+      {all.map(({ w, a }, i) => (
+        <span key={i} className={a ? 'text-brass' : undefined}>{w}{i < all.length - 1 ? ' ' : ''}</span>
+      ))}
     </Tag>
   )
 }

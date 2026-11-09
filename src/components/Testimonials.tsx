@@ -1,48 +1,45 @@
-import { useEffect, useState } from 'react'
-import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { contact, rating, testimonials } from '../data/content'
-import { Icon, ease } from './ui'
-import { rs } from '../lib/img'
+import { Icon } from './ui'
 
+/** Left-to-right row of the real reviews. One card on a phone, two with a peek on a wide screen. */
 export default function Testimonials() {
-  const [i, setI] = useState(0)
-  const n = testimonials.length
-  const ref = useRef<HTMLElement>(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
-  const y = useTransform(scrollYProgress, [0, 1], ['-15%', '15%'])
-  useEffect(() => { const t = setInterval(() => setI((x) => (x + 1) % n), 9000); return () => clearInterval(t) }, [n, i])
-  const t = testimonials[i]
+  const scroller = useRef<HTMLDivElement>(null)
+  const [reduce] = useState(() => matchMedia('(prefers-reduced-motion: reduce)').matches)
+  const by = (dir: number) => {
+    const el = scroller.current
+    if (!el) return
+    const card = el.querySelector<HTMLElement>('figure')
+    const w = (card?.offsetWidth ?? el.clientWidth) + 16
+    el.scrollBy({ left: dir * w, behavior: reduce ? 'auto' : 'smooth' })
+  }
+
   return (
-    <section ref={ref} id="reviews" className="t-red relative overflow-hidden py-14 sm:py-20">
-      <motion.div style={{ y, scale: 1.3 }} className="absolute inset-0">
-        <img src="/interior/exterior2.webp" {...rs('/interior/exterior2.webp')} alt="" aria-hidden className="h-full w-full object-cover" loading="lazy" />
-      </motion.div>
-      <div className="absolute inset-0 bg-ink/75" />
-      <div className="absolute inset-0 bg-gradient-to-b from-cask via-transparent to-ink" />
-      <div className="relative mx-auto max-w-4xl px-5 text-center sm:px-8">
-        <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-          <span className="eyebrow">06 / Patron Voices</span>
-          <a href={contact.reviewsLink} target="_blank" rel="noreferrer" className="flex items-center gap-2 border-b border-brass/30 pb-1 font-sans text-[11px] tracking-[0.12em] text-foam/85 transition-colors duration-500 hover:border-brass">
+    <section id="reviews" className="t-red relative overflow-hidden py-8 sm:py-14 lg:py-20">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-10">
+        <div className="flex flex-col items-center gap-3 text-center sm:flex-row sm:justify-between sm:text-left">
+          <span className="eyebrow">Patron voices</span>
+          <a href={contact.reviewsLink} target="_blank" rel="noreferrer" className="flex items-center gap-2 border-b border-brass/30 pb-1 font-sans text-[11px] tracking-[0.12em] text-foam/90 transition-colors duration-500 hover:border-brass">
             <span className="flex text-brass">{[0, 1, 2, 3, 4].map((k) => <Icon.Star key={k} className="h-3 w-3" />)}</span>{rating}
           </a>
         </div>
-        <Icon.Quote className="mx-auto mt-10 h-12 w-12 text-brass/40" />
-        <div className="relative mt-4 min-h-[260px] sm:min-h-[220px]">
-          <AnimatePresence mode="wait">
-            <motion.figure key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 1.1, ease }}>
-              <blockquote className="font-display text-2xl italic leading-snug text-foam sm:text-[2.1rem]">“{t.text}”</blockquote>
-              <figcaption className="mt-8">
-                <cite className="block font-display text-xl not-italic uppercase tracking-[0.2em] text-brass">{t.author}</cite>
-                <span className="mt-1 block font-sans text-xs text-foam/55">{t.role} • {t.date}</span>
+
+        <div ref={scroller} className="mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 no-scrollbar" tabIndex={0} aria-label="Guest reviews">
+          {testimonials.map((t) => (
+            <figure key={t.author} className="lift w-[84vw] max-w-[460px] shrink-0 snap-start rounded-3xl border border-brass/20 bg-cask p-5 sm:w-[calc(50%-8px)] sm:max-w-none sm:p-7 xl:w-[calc(33.333%-11px)]">
+              <Icon.Quote className="h-8 w-8 text-brass/50" />
+              <blockquote className="mt-3 font-display text-lg leading-snug text-foam sm:text-xl">“{t.text}”</blockquote>
+              <figcaption className="mt-5">
+                <cite className="block font-display text-lg not-italic text-brass">{t.author}</cite>
+                <span className="mt-1 block font-sans text-xs text-foam/65">{t.role} · {t.date}</span>
               </figcaption>
-            </motion.figure>
-          </AnimatePresence>
+            </figure>
+          ))}
         </div>
-        <div className="mt-10 flex items-center justify-center gap-5">
-          <button onClick={() => setI((i - 1 + n) % n)} aria-label="Previous review" className="grid h-11 w-11 place-items-center rounded-full border border-foam/25 text-foam hover:border-brass hover:text-brass"><Icon.Left /></button>
-          <div className="flex gap-2">{testimonials.map((_, k) => <button key={k} onClick={() => setI(k)} aria-label={`Go to slide ${k + 1}`} className={`h-px transition-all duration-700 ${k === i ? 'w-10 bg-brass' : 'w-5 bg-brass/25'}`} />)}</div>
-          <button onClick={() => setI((i + 1) % n)} aria-label="Next review" className="grid h-11 w-11 place-items-center rounded-full border border-foam/25 text-foam hover:border-brass hover:text-brass"><Icon.Right /></button>
+
+        <div className="mt-4 flex items-center justify-center gap-3">
+          <button type="button" onClick={() => by(-1)} aria-label="Previous reviews" className="grid h-11 w-11 place-items-center rounded-full border border-foam/25 text-foam hover:border-brass hover:text-brass"><Icon.Left /></button>
+          <button type="button" onClick={() => by(1)} aria-label="Next reviews" className="grid h-11 w-11 place-items-center rounded-full border border-foam/25 text-foam hover:border-brass hover:text-brass"><Icon.Right /></button>
         </div>
       </div>
     </section>

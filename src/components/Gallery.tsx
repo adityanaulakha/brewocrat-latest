@@ -23,7 +23,7 @@ function FanCard({ g, k, n, p, onOpen, mobile }: { g: (typeof items)[number]; k:
       whileHover={{ y: -26, scale: 1.04, zIndex: 60 }}
       className="absolute left-1/2 top-0 -ml-[70px] aspect-[5/7] w-[140px] origin-bottom overflow-hidden rounded-[18px] bg-cask shadow-[0_24px_50px_-18px_rgba(20,4,2,.75)] ring-1 ring-[#DEB258]/40 sm:-ml-[105px] sm:w-[210px]">
       <img src={g.src} {...rs(g.src, '(min-width: 640px) 210px, 140px')} alt={g.title} loading="lazy" className="h-full w-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-white/5" />
+      <div className="photo-fade pointer-events-none absolute inset-0 opacity-80" />
       <span className="absolute inset-2 rounded-[12px] border border-[#F3D79A]/30" />
     </motion.button>
   )
@@ -39,11 +39,11 @@ export default function Gallery() {
   const deck = items.filter((_, i) => i % 2 === 0).slice(0, mobile ? 7 : 9)
 
   return (
-    <section id="gallery" className="t-red relative flex min-h-[100svh] flex-col justify-center overflow-hidden bg-ink py-12 lg:py-14">
+    <section id="gallery" className="t-red relative overflow-hidden bg-ink py-8 sm:py-12 lg:flex lg:min-h-[100svh] lg:flex-col lg:justify-center lg:py-14">
       <div className="pointer-events-none absolute inset-0" style={{ background: 'radial-gradient(60% 50% at 50% 60%, rgba(212,166,74,.16), transparent 70%)' }} />
       <div className="relative mx-auto w-full max-w-6xl px-5 text-center sm:px-10">
         <Reveal><span className="eyebrow">{galleryCopy.eyebrow}</span></Reveal>
-        <SplitHeading text={galleryCopy.title[0].trim()} accent={galleryCopy.title[1]} className="mt-3 font-display text-[2rem] font-bold text-foam sm:text-5xl" />
+        <SplitHeading text={galleryCopy.title[0].trim()} accent={galleryCopy.title[1]} className="mt-3 font-display text-[2rem] font-bold leading-[1.05] text-foam sm:text-5xl" />
         <Reveal delay={0.1}><p className="mx-auto mt-3 max-w-md font-sans text-sm leading-relaxed text-foam/75">{galleryCopy.desc}</p></Reveal>
         <div ref={ref} className="relative mx-auto mt-10 h-[250px] sm:h-[360px]">
           {deck.map((g, k) => <FanCard key={g.src} g={g} k={k} n={deck.length} p={p} mobile={mobile} onOpen={() => setOpen(items.indexOf(g))} />)}
@@ -53,7 +53,7 @@ export default function Gallery() {
 
       <AnimatePresence>
         {all && (
-          <motion.div className="fixed inset-0 z-[85] overflow-y-auto bg-[#2a0c06]/95 p-4 pt-20 backdrop-blur sm:p-10 sm:pt-24" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} data-lenis-prevent>
+          <motion.div className="fixed inset-0 z-[85] overflow-y-auto bg-[#1C1E10]/95 p-4 pt-20 sm:p-10 sm:pt-24" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} data-lenis-prevent>
             <button aria-label="Close gallery" onClick={() => setAll(false)} className="fixed right-5 top-5 z-10 grid h-11 w-11 place-items-center rounded-full border border-foam/25 bg-black/30 text-foam"><Icon.Close /></button>
             <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
               {items.map((g, i) => (
@@ -67,7 +67,7 @@ export default function Gallery() {
 
       <AnimatePresence>
         {open !== null && (
-          <motion.div className="fixed inset-0 z-[95] flex items-center justify-center bg-black/90 p-4 backdrop-blur" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(null)}>
+          <motion.div className="fixed inset-0 z-[95] flex items-center justify-center bg-black/92 p-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(null)}>
             <motion.img key={open} src={items[open].src} alt={items[open].title} className="max-h-[82vh] max-w-full rounded-2xl object-contain" initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.4 }} onClick={(e) => e.stopPropagation()} />
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 font-display text-xl text-foam">{items[open].title}</div>
             <button aria-label="Close" className="absolute right-5 top-5 grid h-11 w-11 place-items-center rounded-full border border-foam/20 text-foam"><Icon.Close /></button>

@@ -8,7 +8,6 @@ export default {
       fontFamily: {
         display: ['Fraunces', 'Georgia', 'serif'],
         sans: ['Lora', 'Georgia', 'serif'],
-        script: ['"Dancing Script"', 'cursive'],
       },
     },
   },

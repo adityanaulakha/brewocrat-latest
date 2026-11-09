@@ -12,29 +12,29 @@
 .t-ivory{ --c-ink: 233 220 196; --c-cask: 240 228 208; --c-oak: 224 208 180; --c-malt: 210 190 160; --c-brass: 143 46 28; --c-amber: 181 72 42; --c-honey: 122 36 22; --c-foam: 52 22 14; --c-copper: 79 85 40; --c-cta: 143 46 28; --c-cta-ink: 248 236 214; }
 .t-olive, .t-ivory, .t-red { background-color: rgb(var(--c-ink)); color: rgb(var(--c-foam)); }
 .t-ivory { color-scheme: light; }
-html { -webkit-font-smoothing: antialiased; }
+html { -webkit-font-smoothing: antialiased; overflow-x: clip; overscroll-behavior-x: none; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-stopped { overflow: hidden; }
 body { background: #7A2416; color: #F8ECD6; font-family: Lora, Georgia, serif; overflow-x: hidden; }
 h1, h2, h3, .font-display { font-synthesis: none; }
 h1.font-display, h2.font-display, .h-display { font-weight: 700; font-variation-settings: 'SOFT' 30, 'WONK' 0; letter-spacing: -0.01em; }
-/* subheading: Fraunces italic semibold, accent words in a script */
+/* Same face for a whole headline. Emphasis is colour (brass), not a second typeface. */
 .sub { font-family: Fraunces, Georgia, serif; font-style: italic; font-weight: 600; }
-.script { font-family: 'Dancing Script', cursive; font-weight: 700; font-style: normal; letter-spacing: 0; }
 ::selection { background: #D4A64A; color:#34100A; color: #FBF3E6; }
+section[id] { scroll-margin-top: 5.5rem; }
 
 @layer components {
-  .gold-text { color: rgb(var(--c-brass)); }
-  .gold-text.italic, .accent { font-family: 'Dancing Script', cursive; font-style: normal; font-weight: 700; text-transform: none; letter-spacing: 0; font-size: 1.08em; }
+  .gold-text, .accent { color: rgb(var(--c-brass)); }
   .eyebrow { @apply font-sans text-[10px] sm:text-[11px] font-extrabold uppercase tracking-[0.26em] text-brass; }
   .h-display { @apply font-display font-bold leading-[1] tracking-[-0.01em]; }
-  /* buttons: understated — fine pill, hairline edge, no lift or glow */
+  /* Raised, not glassy: a short shadow, and a faint brass glow only while the pointer is on a gold button. */
   .btn-gold {
-    @apply inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.16em] transition-[filter,background-color,color] duration-500;
+    @apply inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.16em] transition-[filter,background-color,color,box-shadow] duration-500;
     background: rgb(var(--c-cta)); color: rgb(var(--c-cta-ink));
+    box-shadow: 0 10px 22px -14px rgba(28, 30, 16, 0.75);
   }
-  .btn-gold:hover { filter: brightness(1.1); }
+  .btn-gold:hover { filter: brightness(1.06); box-shadow: 0 14px 28px -14px rgba(28, 30, 16, 0.7), 0 0 22px -10px rgba(212, 166, 74, 0.45); }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full border border-brass/35 px-7 py-3.5 text-[11px] font-bold uppercase tracking-[0.16em] text-foam/90 transition-colors duration-500 hover:border-brass hover:text-honey;
     background: transparent;
@@ -47,7 +47,9 @@ h1.font-display, h2.font-display, .h-display { font-weight: 700; font-variation-
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   .wood { background: radial-gradient(120% 80% at 50% 0%, rgb(var(--c-oak)) 0%, rgb(var(--c-cask)) 55%, rgb(var(--c-ink)) 100%); }
-  .card-glass { background: linear-gradient(160deg, rgb(var(--c-foam) / .05), rgb(var(--c-foam) / .015)); border: 1px solid rgb(var(--c-brass) / .2); }
+  .card-glass { background: rgb(var(--c-cask)); border: 1px solid rgb(var(--c-brass) / .22); box-shadow: 0 18px 40px -24px rgba(28, 30, 16, .5); }
+  .lift { box-shadow: 0 1px 1px rgba(28, 30, 16, 0.05), 0 18px 40px -22px rgba(28, 30, 16, 0.55); }
+  .photo-fade { background: linear-gradient(to top, rgba(28,30,16,.84) 0%, rgba(28,30,16,.38) 32%, rgba(28,30,16,.1) 56%, rgba(28,30,16,0) 74%); }
   .frame { position: relative; }
   .frame::after { content: ''; position: absolute; inset: 10px; border: 1px solid rgb(var(--c-honey) / .25); pointer-events: none; }
   .rule { height: 1px; background: rgb(var(--c-brass) / .25); }
@@ -72,8 +74,11 @@ h1.font-display, h2.font-display, .h-display { font-weight: 700; font-variation-
 }
 @keyframes flag-shade { from { opacity: 1; } to { opacity: .62; } }
 
+/* Card turn: back faces the reader until scroll brings the front around. Reduced motion shows the front at once. */
+.ls-link { transform: rotateY(-180deg); transform-style: preserve-3d; transform-origin: center center; }
 @media (prefers-reduced-motion: reduce) {
   .flag-track, .flag-ch { animation: none !important; }
+  .ls-link { transform: none !important; }
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 }
 
@@ -84,7 +89,7 @@ h1.font-display, h2.font-display, .h-display { font-weight: 700; font-variation-
 .t-ivory .text-foam\/35, .t-ivory .text-foam\/40, .t-ivory .text-foam\/45, .t-ivory .text-foam\/50, .t-ivory .text-foam\/55, .t-ivory .text-foam\/60, .t-ivory .text-foam\/65 { color: rgb(var(--c-foam) / .74); }
 .t-olive .text-foam\/35, .t-olive .text-foam\/40, .t-olive .text-foam\/45, .t-olive .text-foam\/50, .t-olive .text-foam\/55, .t-olive .text-foam\/60, .t-olive .text-foam\/65, .t-red .text-foam\/35, .t-red .text-foam\/40, .t-red .text-foam\/45, .t-red .text-foam\/50, .t-red .text-foam\/55, .t-red .text-foam\/60, .t-red .text-foam\/65 { color: rgb(var(--c-foam) / .66); }
 
-.hero-btn { display: inline-flex; align-items: center; gap: .6rem; white-space: nowrap; border-radius: 9999px; border: 1px solid rgba(236,204,138,.75); padding: .85rem 1.35rem; font-family: Lora, Georgia, serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .2em; color: #F8ECD6; background: rgba(40,10,5,.18); backdrop-filter: blur(6px); transition: background-color .4s, color .4s, border-color .4s; }
+.hero-btn { display: inline-flex; align-items: center; gap: .6rem; white-space: nowrap; border-radius: 9999px; border: 1px solid rgba(236,204,138,.75); padding: .85rem 1.35rem; font-family: Lora, Georgia, serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .2em; color: #F8ECD6; background: rgba(28,30,16,.55); box-shadow: 0 10px 22px -14px rgba(28,30,16,.7); transition: background-color .4s, color .4s, border-color .4s; }
 .hero-btn:hover, .hero-btn[aria-expanded="true"] { background: #D4A64A; color: #34100A; border-color: #D4A64A; }
 @media (min-width: 640px) { .hero-btn { padding: 1rem 1.9rem; } }
 

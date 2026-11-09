@@ -1,6 +1,8 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { brand, contact, footerImages } from '../data/content'
+import { backdropSlots } from '../data/backdrops'
 import { Icon, Reveal } from './ui'
+import Backdrop from './Backdrop'
 import { getLenis, scrollToId } from '../lib/scroll'
 
 const explore = [
@@ -38,25 +40,25 @@ export default function Footer() {
 
   return (
     <footer className="t-ivory relative overflow-hidden bg-ink">
-      <div className="h-px bg-brass/25" />
-      <div className="mx-auto max-w-7xl px-6 pt-20 sm:px-10 lg:pt-28">
-        {/* brand row */}
-        <Reveal className="flex flex-col gap-10 border-b border-foam/10 pb-14 md:flex-row md:items-end md:justify-between">
+      <Backdrop slot={backdropSlots.footer} />
+      <div className="relative z-10 h-px bg-brass/25" />
+      <div className="relative z-10 mx-auto max-w-7xl px-6 pt-12 sm:px-10 lg:pt-20">
+        <Reveal className="flex flex-col gap-8 border-b border-foam/10 pb-10 md:flex-row md:items-end md:justify-between">
           <div className="max-w-md">
             <img src={brand.logo} alt="Brewocrat Logo" loading="lazy" className="h-14 w-auto sm:h-16" />
-            <p className="mt-7 font-display text-[2rem] leading-[1.1] text-foam sm:text-[2.6rem]">
-              Brewery. <span className="italic text-brass">Skybar.</span> Kitchen.
+            <p className="mt-6 font-display text-[2rem] font-bold leading-[1.1] text-foam sm:text-[2.6rem]">
+              Brewery. <span className="text-brass">Skybar.</span> Kitchen.
             </p>
           </div>
           <div className="flex items-end gap-4">
             {footerImages.map((f) => (
-              <img key={f.src} src={f.src} alt={f.alt} loading="lazy" className="h-36 w-28 rounded-t-full object-cover sm:h-44 sm:w-32" />
+              <img key={f.src} src={f.src} alt={f.alt} loading="lazy" className="lift h-36 w-28 rounded-[1.35rem] object-cover sm:h-44 sm:w-32" />
             ))}
           </div>
         </Reveal>
 
         {/* columns */}
-        <Reveal className="grid grid-cols-1 gap-x-10 gap-y-12 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:py-16">
+        <Reveal className="grid grid-cols-1 gap-x-10 gap-y-8 py-8 sm:grid-cols-2 lg:grid-cols-4 lg:py-14">
           <Col title="Visit Us">
             <p>{contact.addressFooter}</p>
             <a href={contact.mapLink} target="_blank" rel="noreferrer" className="btn-line mt-3 !text-[10.5px]">Get directions <Icon.Arrow className="h-3 w-3" /></a>
@@ -97,7 +99,7 @@ export default function Footer() {
           <p className="font-sans text-xs text-foam/60">{contact.copyright}</p>
           <div className="flex items-center gap-5">
             <p className="font-sans text-xs text-foam/60">Designed and Developed by <a href={contact.credit.href} target="_blank" rel="noreferrer" className="underline hover:text-brass">{contact.credit.label}</a></p>
-            <button aria-label="Scroll to top" onClick={top} className="grid h-10 w-10 place-items-center rounded-full bg-cta text-[#FBF3E6] transition-[filter] duration-500 hover:brightness-110"><Icon.Arrow className="h-4 w-4 -rotate-90" /></button>
+            <button aria-label="Scroll to top" onClick={top} className="grid h-10 w-10 place-items-center rounded-full bg-cta text-[#FBF3E6] shadow-[0_10px_22px_-12px_rgba(28,30,16,.7)] transition-[filter] duration-500 hover:brightness-110"><Icon.Arrow className="h-4 w-4 -rotate-90" /></button>
           </div>
         </div>
       </div>

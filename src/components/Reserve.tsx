@@ -1,14 +1,16 @@
 import { contact } from '../data/content'
+import { backdropSlots } from '../data/backdrops'
 import { Icon, Reveal, SplitHeading } from './ui'
+import Backdrop from './Backdrop'
 
 export default function Reserve({ onBook }: { onBook: () => void }) {
   return (
-    <section id="visit" className="t-olive relative overflow-hidden bg-cask py-14 lg:py-20">
-      <div className="pointer-events-none absolute -left-40 top-0 h-[600px] w-[600px] rounded-full opacity-40 blur-3xl" style={{ background: 'radial-gradient(circle, rgba(92,99,48,.18), transparent 65%)' }} />
-      <div className="relative mx-auto grid max-w-7xl gap-12 px-6 sm:px-10 lg:grid-cols-2 lg:items-center">
+    <section id="visit" className="t-olive relative overflow-hidden bg-cask py-8 sm:py-12 lg:py-20">
+      <Backdrop slot={backdropSlots.visit} />
+      <div className="relative z-10 mx-auto grid max-w-7xl gap-8 px-6 sm:px-10 lg:grid-cols-2 lg:items-center lg:gap-12">
         <div>
           <Reveal><span className="eyebrow">Instant table booking</span></Reveal>
-          <SplitHeading text="Reserve your table" accent="beneath the stars" className="mt-3 font-display text-5xl font-bold uppercase leading-[0.95] text-foam sm:text-7xl" />
+          <SplitHeading text="Reserve your table" accent="beneath the stars" className="mt-3 font-display text-[2rem] font-bold leading-[1.05] text-foam sm:text-5xl lg:text-6xl" />
           <Reveal delay={0.15}>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <button onClick={onBook} className="btn-gold"><Icon.Calendar /> Instant table booking <Icon.Arrow /></button>
@@ -16,7 +18,7 @@ export default function Reserve({ onBook }: { onBook: () => void }) {
             </div>
           </Reveal>
           <Reveal delay={0.2}>
-            <div className="mt-10 overflow-hidden rounded-2xl border border-brass/20">
+            <div className="lift mt-8 overflow-hidden rounded-2xl border border-brass/20">
               <iframe title="Brewocrat on Google Maps" src={contact.mapEmbed} className="h-[260px] w-full grayscale-[60%] invert-[90%] hue-rotate-180 contrast-[.9]" loading="lazy" />
             </div>
           </Reveal>
