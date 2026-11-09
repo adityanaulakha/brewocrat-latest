@@ -3,7 +3,7 @@ import { brand, contact, footerImages } from '../data/content'
 import { backdropSlots } from '../data/backdrops'
 import { Icon, Reveal } from './ui'
 import Backdrop from './Backdrop'
-import { getLenis, scrollToId } from '../lib/scroll'
+import { scrollToId, scrollToTop } from '../lib/scroll'
 
 const explore = [
   { label: 'About', id: 'about' },
@@ -35,7 +35,7 @@ export default function Footer() {
   const loc = useLocation()
   const nav = useNavigate()
   const go = (id: string) => (loc.pathname !== '/' ? (nav('/'), setTimeout(() => scrollToId(id), 350)) : scrollToId(id))
-  const top = () => { const l = getLenis(); l ? l.scrollTo(0, { duration: 1.6 }) : window.scrollTo({ top: 0, behavior: 'smooth' }) }
+  const top = () => scrollToTop()
   const link = 'transition-colors duration-500 hover:text-brass'
 
   return (

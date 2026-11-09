@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { brand } from '../data/content'
 import { drinkCategories, menuCategories } from '../data/extracted'
+import { scrollToTop } from '../lib/scroll'
 
 type Item = { label: string; note?: string; go: () => void }
 
@@ -153,7 +154,13 @@ export default function Nav({ onBook }: { onBook: (n?: string) => void }) {
           }`}>
           <DropTrigger id="book" label="Book Now" shortLabel="Book Now" items={book} align="left" open={open} setOpen={setOpen} light={false} onPick={pick} desktop={isDesktop} />
 
-          <Link to="/" onClick={() => window.scrollTo({ top: 0 })} aria-label="Brewocrat home"
+          <Link to="/" onClick={(e) => {
+            if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return
+            if (loc.pathname === '/') {
+              e.preventDefault()
+              scrollToTop()
+            }
+          }} aria-label="Brewocrat home"
             className="absolute left-1/2 top-1/2 z-20 grid h-[58px] w-[58px] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-[#DEB258]/70 bg-[#1C1E10] shadow-[0_0_22px_-6px_rgba(212,166,74,.55),0_8px_24px_rgba(20,4,2,.4)] transition sm:h-[72px] sm:w-[72px]">
             <img src={brand.navEmblem} srcSet={`${brand.navEmblem} 1x, ${brand.navEmblem2x} 2x`} alt="" aria-hidden
               className="h-10 w-10 object-contain sm:h-12 sm:w-12" />

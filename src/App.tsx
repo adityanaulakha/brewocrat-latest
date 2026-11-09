@@ -1,13 +1,13 @@
-import { Suspense, lazy, useCallback, useEffect, useState } from 'react'
+import { Suspense, lazy, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import Lenis from 'lenis'
 import Preloader from './components/Preloader'
 import Nav from './components/Nav'
 import Hero from './components/Hero'
 import Footer from './components/Footer'
 import BookModal from './components/BookModal'
-import { setLenis } from './lib/scroll'
+import { isHeroTopHref, scrollToTop, setLenis } from './lib/scroll'
 import { ScrollTrigger } from './lib/motion'
 
 // the menu route is its own chunk (it isn't needed for the landing page)
@@ -30,6 +30,8 @@ function Home({ ready, onBook }: { ready: boolean; onBook: (n?: string) => void 
 
 export default function App() {
   const loc = useLocation()
+  const navigate = useNavigate()
+  const pathRef = useRef(loc.pathname)
   const [loading, setLoading] = useState(loc.pathname === '/')
   const [ready, setReady] = useState(loc.pathname !== '/')
   const [book, setBook] = useState(false)
@@ -50,6 +52,28 @@ export default function App() {
       ? 'Menu - Brewocrat Brewery · Skybar · Kitchen'
       : 'Brewocrat - Brewery · Skybar · Kitchen | Element One, Gurugram'
   }, [loc.pathname])
+
+  useLayoutEffect(() => {
+    if (pathRef.current === loc.pathname) return
+    pathRef.current = loc.pathname
+    scrollToTop({ immediate: true })
+  }, [loc.pathname])
+
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+      const anchor = (e.target as Element | null)?.closest?.('a[href]')
+      if (!anchor || !isHeroTopHref(anchor.getAttribute('href'))) return
+      e.preventDefault()
+      if (window.location.pathname !== '/') {
+        navigate('/')
+        return
+      }
+      scrollToTop()
+    }
+    document.addEventListener('click', onClick)
+    return () => document.removeEventListener('click', onClick)
+  }, [navigate])
 
   const openBook = useCallback((n?: string) => { setNote(n); setBook(true) }, [])
   const done = useCallback(() => { setLoading(false); setTimeout(() => setReady(true), 250) }, [])

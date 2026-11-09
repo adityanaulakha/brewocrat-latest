@@ -7,9 +7,26 @@ import { scrollToId } from '../lib/scroll'
 import Backdrop from './Backdrop'
 import { Icon, Reveal, SplitHeading } from './ui'
 
-/* Scroll-entry 3D turn, matched to the Alchemist LinksSection:
-   desktop plays rotationY -180 → 0 over 2s (back.out, stagger .5) and reverses on the way up;
-   mobile scrubs the same turn per card. The face you read is the front; the back is only the turn. */
+/* Scroll-entry 3D turn. Desktop and mobile are tuned separately.
+   Desktop plays once the card row hits 55% of the viewport and reverses on the way up.
+   Mobile scrubs each card across a long scroll. The front is the face you read. */
+const DESKTOP_TURN = {
+  duration: 2.2,
+  ease: 'power2.inOut',
+  stagger: 0.28,
+  scaleFrom: 0.97,
+  scaleTo: 1,
+  start: 'top 55%',
+} as const
+
+const MOBILE_TURN = {
+  ease: 'power1.inOut',
+  scrub: 1.4,
+  scaleFrom: 0.97,
+  scaleTo: 1,
+  start: 'top 92%',
+  end: 'bottom 28%',
+} as const
 const cards = [
   { key: 'experience', eyebrow: 'Venue & parties', title: 'Explore the', accent: 'experience', line: 'Courtyard, skybar, and private tables.', cta: 'Plan an evening', video: '/video/cards/experience.mp4', poster: '/video/cards/experience.webp', to: 'moments' },
   { key: 'food', eyebrow: 'The kitchen', title: 'Explore our', accent: 'food', line: 'Wood-fired, sigri, and claypot plates.', cta: 'See the food menu', video: '/video/cards/food.mp4', poster: '/video/cards/food.webp', to: '/menu' },
@@ -90,30 +107,31 @@ export default function ExperienceCards() {
         paused: true,
         scrollTrigger: {
           trigger: links[0].parentElement,
-          start: 'top 70%',
+          start: DESKTOP_TURN.start,
           end: 'top 10%',
           toggleActions: 'play none none reverse',
         },
       })
-      tl.fromTo(links, { rotationY: -180 }, {
+      tl.fromTo(links, { rotationY: -180, scale: DESKTOP_TURN.scaleFrom }, {
         rotationY: 0,
-        duration: 2,
-        ease: 'back.out',
-        stagger: { amount: 0.5, from: 'start' },
+        scale: DESKTOP_TURN.scaleTo,
+        duration: DESKTOP_TURN.duration,
+        ease: DESKTOP_TURN.ease,
+        stagger: DESKTOP_TURN.stagger,
       })
     })
 
     mm.add(`${motion} and (max-width: 1023px)`, () => {
       links.forEach((link) => {
-        gsap.fromTo(link, { rotationY: -180 }, {
+        gsap.fromTo(link, { rotationY: -180, scale: MOBILE_TURN.scaleFrom }, {
           rotationY: 0,
-          duration: 2,
-          ease: 'power2.out',
+          scale: MOBILE_TURN.scaleTo,
+          ease: MOBILE_TURN.ease,
           scrollTrigger: {
             trigger: link,
-            start: 'center bottom',
-            end: 'bottom bottom',
-            scrub: 1,
+            start: MOBILE_TURN.start,
+            end: MOBILE_TURN.end,
+            scrub: MOBILE_TURN.scrub,
           },
         })
       })
